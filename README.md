@@ -12,7 +12,7 @@ This repository contains guidelines related to various aspects of managing GitHu
 <!-- vim-markdown-toc GFM -->
 
 * [Branching model 🌲](#branching-model-)
-    * [Key Concepts](#key-concepts)
+    * [Key concepts](#key-concepts)
     * [Deviations from GitFlow article](#deviations-from-gitflow-article)
     * [Feature branches](#feature-branches)
 * [Repository naming scheme 📝](#repository-naming-scheme-)
@@ -25,6 +25,15 @@ This repository contains guidelines related to various aspects of managing GitHu
 * [Changelog 📋](#changelog-)
 * [Releases 🚀](#releases-)
 * [Release artifacts naming scheme 📦](#release-artifacts-naming-scheme-)
+    * [General rules](#general-rules-1)
+    * [Naming scheme](#naming-scheme-1)
+    * [Qualifiers](#qualifiers)
+        * [Misc qualifiers](#misc-qualifiers)
+        * [Git hash](#git-hash)
+    * [Valid release objects names](#valid-release-objects-names)
+        * [Simple firmware project:](#simple-firmware-project)
+        * [Firmware project with application and bootloader firmwares:](#firmware-project-with-application-and-bootloader-firmwares)
+        * [Firmware project with application and bootloader firmwares, and various sets of build flags:](#firmware-project-with-application-and-bootloader-firmwares-and-various-sets-of-build-flags)
 
 <!-- vim-markdown-toc -->
 
@@ -38,7 +47,7 @@ This repository contains guidelines related to various aspects of managing GitHu
 
 The IRNAS's Git branching model is based on the [GitFlow] branching model with some small differences.
 
-### Key Concepts
+### Key concepts
 
 Each repository needs to have two long-lived branches, `master` and `dev`.
 
@@ -80,6 +89,7 @@ This enables smaller feedback loops, as Pull Request reviews become more digesti
 ## Repository naming scheme 📝
 
 ### General rules
+
 * Names are written in lowercase letters.
 * Names consists of several fields separated by dashes, which means that the fields themselves can not contain dashes.
 * Some fields are mandatory, some of them are optional, as per project requirements.
@@ -173,6 +183,88 @@ New projects should start with a version `1.0.0` and continue from there.
 ## Releases 🚀
 
 ## Release artifacts naming scheme 📦
+
+**Important** : this section is relevant only for software and firmware projects as the release process for meachnical and hardware projects still yet needs to be defined.
+
+### General rules
+
+* Names are written in lowercase letters.
+* Names consists of several fields separated by dashes, which means that the fields themselves can not contain dashes.
+* Some fields are mandatory, some of them are optional, as per project requirements.
+* Underscores are not allowed.
+
+### Naming scheme
+
+The naming scheme that should be used for release objects:
+```
+{project}-{firmware_type}-{board_name}-{hardware_version}-{firmware_version}-{qualifier}.{file_extension}
+```
+
+Fields `project`, `firmware_version` are the only ones that are mandatory, others should be added to avoid any confusion when dealing with generated files.
+If the `repo_type` of your GitHub project is `firmware` then `hardware_version` field is mandatory.
+
+Explanation of fields:
+* `project` - Project name, such as `blebeacon` or `tracker`
+* `firmware_type` - Type of the firmware, needs to be added if build system produces applications and bootloader firmware. It be `app` (for application firmware or software) or `bl` (for bootloader firmware).
+* `board_name` - If a project supports multiple boards, this field should be used to distinguish between different hardware boards, such as, `VYPER_GO` and `VYPER_30`.
+* `hardware_version` - Hardware version of the board which consists of `hv` and a version number. Hardware versions such as `hv1.2.0`, `hv4.0.1` or `hv0.5.1` are all valid options.
+* `version` - Version of the software/firmware which consists of `v` and a version number. Versions such as `v1.2.0`, `v4.0.1` or `v0.5.1` are all valid options.
+* `qualifier` - Optional field, see explanation below.
+* `file_extension` - Depends on a generated object, could be `bin`, `elf`, `hex` or something else.
+
+### Qualifiers
+
+Qualifiers come in several forms:
+
+* Misc qualifiers - examples: `log`, `dbg`, `dbgble` `rf`
+* 7 char Git hash - examples: `57fb962`, `a982467`, `6b3089c`
+
+#### Misc qualifiers
+
+These are special qualifiers that indicate that some special set of build flags was used to build a release artifact.
+Release artifacts that are meant to be used in the production do not contain any misc qualifiers.
+
+Example scenario: you could be developing firmware that is used:
+* in production, with debug logs turned off,
+* in development, with debug logs turned on and
+* in RF compliance tests, where device behaves completely differently for the purposes of testing.
+
+In that scenario production artifact would have no misc qualifier, development artifact could have `log` qualifier and RF compliance artifact would have `rf` qualifier.
+
+Project that uses misc qualifiers should have their meaning and usage documented in a visible place, such as project's README.
+
+#### Git hash
+
+Git hash qualifiers are useful internal testing processes of the product and where later identification is required.
+The version that precedes the qualifier should be a version of the release that was **already released**.
+
+**Important:** release artifacts should never contain git hash qualifiers.
+
+### Valid release objects names
+
+Below release names are all valid examples:
+
+Simple firmware project:
+* GitHub repo name: `irnas-blebeacon-firmware`
+* Release artifacts: `blebeacon-hv1.4.0-v1.3.3.hex`
+
+
+Firmware project with application and bootloader firmwares:
+* GitHub repo name: `irnas-robot-firmware`
+* Release artifacts:
+    - `robot-app-hv1.4.0-v1.0.0.hex`
+    - `robot-bl-hv1.0.0-v1.0.0.hex`
+
+Firmware project with application and bootloader firmwares, and various sets of build flags:
+* GitHub repo name: `irnas-largerobot-firmware`
+* Release artifacts:
+    - `largerobot-app-hv1.4.0-v1.0.0.hex`
+    - `largerobot-bl-hv1.0.0-v1.0.0.hex`
+    - `largerobot-app-hv1.4.0-v1.0.0-log.hex`
+    - `largerobot-bl-hv1.0.0-v1.0.0-log.hex`
+    - `largerobot-app-hv1.4.0-v1.0.0-rf.hex`
+    - `largerobot-bl-hv1.0.0-v1.0.0-rf.hex`
+
 
 [GitFlow]: https://nvie.com/posts/a-successful-git-branching-model
 [SemVer]: https://semver.org
