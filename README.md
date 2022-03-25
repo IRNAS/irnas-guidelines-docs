@@ -25,6 +25,9 @@ This repository contains guidelines related to various aspects of managing GitHu
 * [Changelog 📋](#changelog-)
     * [Content of changelog notes](#content-of-changelog-notes)
 * [Releases 🚀](#releases-)
+    * [Tagging and naming releases](#tagging-and-naming-releases)
+    * [Release notes](#release-notes)
+    * [Creating releases](#creating-releases)
 * [Release artifacts naming scheme 📦](#release-artifacts-naming-scheme-)
     * [General rules](#general-rules-1)
     * [Naming scheme](#naming-scheme-1)
@@ -217,9 +220,41 @@ In general, your changelog notes should answer the following questions:
 
 ## Releases 🚀
 
+Taken from https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases:
+
+> Releases are deployable software iterations you can package and make available for a wider audience to download and use.
+Releases are based on Git tags, which mark a specific point in your repository's history.
+A tag date may be different from a release date since they can be created at different times.
+
+GitHub release consists of a git tag, some text (commonly referred to as Release Notes) and artifacts (binaries, executables, any kind of documentation, etc.)
+
+### Tagging and naming releases
+
+Release tags and names consist of the letter `v` followed by a version number.
+
+Below tags are all valid examples:
+* `v0.1.4`
+* `v0.9.3`
+* `v1.0.0`
+* `v1.1.0`
+* `v1.12.45`
+* `v5.0.0`
+
+The name of a GitHub release should be identical to the tag that the release was created from.
+
+### Release notes
+
+Release notes are identical to the changelog notes for that specific version of a project and should be always kept in sync.
+
+### Creating releases
+
+Since we are following [GitFLow] branching model, a GitHub release is always created after a release branch is merged into the master branch and the tag has been created.
+
+This process can be/is automated with GitHub Actions.
+
 ## Release artifacts naming scheme 📦
 
-**Important** : this section is relevant only for software and firmware projects as the release process for meachnical and hardware projects still yet needs to be defined.
+**Important** : this section is relevant only for software and firmware projects as the release process for mechanical and hardware projects still yet needs to be defined.
 
 ### General rules
 
@@ -345,7 +380,6 @@ Documentation about the used test and validation processes can be found here: _e
 **This product version was superseded by the version _version number_. **
 ```
 
-
-
 [GitFlow]: https://nvie.com/posts/a-successful-git-branching-model
 [SemVer]: https://semver.org
+[Keep a Changelog's]: https://keepachangelog.com/en/1.0.0/
