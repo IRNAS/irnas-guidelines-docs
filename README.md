@@ -24,6 +24,7 @@ This repository contains guidelines related to various aspects of managing GitHu
     * [Mechanical projects](#mechanical-projects)
 * [Changelog 📋](#changelog-)
     * [Content of changelog notes](#content-of-changelog-notes)
+    * [Zepyhr drivers](#zepyhr-drivers)
 * [Releases 🚀](#releases-)
     * [Tagging and naming releases](#tagging-and-naming-releases)
     * [Release notes](#release-notes)
@@ -217,6 +218,18 @@ In general, your changelog notes should answer the following questions:
 * Why has that thing changed?
 * How does this change impact the user?
 * What does the user need to do differently as a result?
+
+### Zepyhr drivers
+
+When creating a version entry for a Zepyhr driver add a section which says on which NCS version was the driver built.
+This information should be visible to the developer which is deciding which version of driver to use so that it will work with its NCS version of the project.
+Use below template:
+```markdown
+
+### Compatibility
+
+-    This release was built and test on NCS version <version>.
+```
 
 ## Releases 🚀
 
