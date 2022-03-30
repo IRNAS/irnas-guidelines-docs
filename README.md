@@ -18,7 +18,7 @@ This repository contains guidelines related to various aspects of managing GitHu
 * [Repository naming scheme 📝](#repository-naming-scheme-)
     * [General rules](#general-rules)
     * [Naming scheme](#naming-scheme)
-* [Versioning and tagging 🏷️](#versioning-and-tagging-)
+* [Versioning 1️⃣0️⃣0️⃣](#versioning-1️⃣0️⃣0️⃣)
     * [Software/Firmware projects](#softwarefirmware-projects)
     * [Hardware projects](#hardware-projects)
     * [Mechanical projects](#mechanical-projects)
@@ -133,7 +133,7 @@ Some examples include:
 - `fabrikor-3dprinter-nrf52-firmware`
 - `irnas-guidelines-docs`
 
-## Versioning and tagging 🏷️
+## Versioning 1️⃣0️⃣0️⃣
 
 The versioning scheme consists of 3 numbers separated by dots:
 ```
