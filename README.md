@@ -228,7 +228,7 @@ Use below template:
 
 ### Compatibility
 
--    This release was built and test on NCS version <version>.
+-    This release was built and tested on NCS version <version>.
 ```
 
 ## Releases 🚀
