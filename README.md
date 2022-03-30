@@ -32,9 +32,7 @@ This repository contains guidelines related to various aspects of managing GitHu
         * [Misc qualifiers](#misc-qualifiers)
         * [Git hash](#git-hash)
     * [Valid release objects names](#valid-release-objects-names)
-        * [Simple firmware project:](#simple-firmware-project)
-        * [Firmware project with application and bootloader firmwares:](#firmware-project-with-application-and-bootloader-firmwares)
-        * [Firmware project with application and bootloader firmwares, and various sets of build flags:](#firmware-project-with-application-and-bootloader-firmwares-and-various-sets-of-build-flags)
+* [Production versions 🏭](#production-versions-)
 
 <!-- vim-markdown-toc -->
 
@@ -301,6 +299,52 @@ Firmware project with application and bootloader firmwares, and various sets of 
     - `largerobot-bl-hv1.0.0-v1.0.0-log.hex`
     - `largerobot-app-hv1.4.0-v1.0.0-rf.hex`
     - `largerobot-bl-hv1.0.0-v1.0.0-rf.hex`
+
+
+## Production versions 🏭
+
+Some versions of the project will be used in the production environment.
+The production environment is a final destination where the project will be put into operation and thus will be used by the end-users.
+To ensure that the project works in production it should go through testing and validation processes that are specific to that project.
+
+The testing entity (either IRNAS, the customer, or both) that performs these processes has a final say if a specific version is suitable for the production environment.
+
+Taking the above into account, when a project version is being introduced into the production environment two steps should be done:
+1. Test and validation processes need to be documented and easily accessible.
+2. When a version of a project is tested, validated, and signed by the testing entity this should be marked in its appropriate version entry in the changelog and release notes for easier later identification.
+
+When marking a version as a production version please follow the below template, **prepend it to the rest of changelog/release notes**.
+
+Try to keep the extra information to a minimum, if more information needs to be communicated (such as test, validation reports, etc.) those should be contained in a separate linked document.
+
+```markdown
+### Production version
+
+This version is used in the production since _date_!
+This version has been tested and validated by the _testing entity_ on _testing date_ (or during _the testing period_) and has been approved to be used in a production environment.
+Documentation about the used test and validation processes can be found here: _embedd link to Github, GitBook or something else_.
+
+_Additional info here if needed._
+```
+
+Eventually, a new production version will be created.
+In that case, you should:
+1. Perform the same steps as before, document test and validations processes that were used and mark a production version in the changelog and release notes.
+2. Find the previous production version in the changelog and release notes, strikethrough the text related to the production version and add a text that points to the new production version, see example below.
+
+
+```markdown
+### Production version
+
+~~This version is used in the production since _date_!
+This version has been tested and validated by the _testing entity_ on _testing date_ (or during _the testing period_) and has been approved to be used in the production environment.
+Documentation about the used test and validation processes can be found here: _embedd link to Github, GitBook or something else_.~~
+
+~~_Additional info here if needed._~~
+
+**This product version was superseded by the version _version number_. **
+```
+
 
 
 [GitFlow]: https://nvie.com/posts/a-successful-git-branching-model
