@@ -23,6 +23,7 @@ This repository contains guidelines related to various aspects of managing GitHu
     * [Hardware projects](#hardware-projects)
     * [Mechanical projects](#mechanical-projects)
 * [Changelog 📋](#changelog-)
+    * [Content of changelog notes](#content-of-changelog-notes)
 * [Releases 🚀](#releases-)
 * [Release artifacts naming scheme 📦](#release-artifacts-naming-scheme-)
     * [General rules](#general-rules-1)
@@ -179,6 +180,42 @@ Number `bugfix` is never incremented and is always set to `0`.
 New projects should start with a version `1.0.0` and continue from there.
 
 ## Changelog 📋
+
+A changelog is a file that contains a curated, chronologically ordered list of notable changes for each version of a project.
+Changelog makes it easier for users and engineers to see precisely what notable changes have been made between each version of the project.
+
+IRNAS's changelog format is based on the [Keep a Changelog's] format, we follow it almost to a point with some minor additions and modifications.
+
+This means that:
+* We follow its overall structure in markdown, which can be seen at the top of the page.
+* We follow its _guiding principles_, however, we define our versioning scheme.
+* Each version entry needs to be linkable, where the link points to a page showing the comparison between that version and the previous one.
+* Each bullet line should finish with a period dot.
+
+The same types of changes should be grouped under one of the following groups:
+* `Added` for new features,
+* `Changed` for changes in existing functionality,
+* `Deprecated` for soon-to-be removed features,
+* `Removed` for now removed features,
+* `Fixed` for any bug fixes and
+* `Security` in case of vulnerabilities.
+
+### Content of changelog notes
+
+Changelog notes can be seen as a common point between development and business.
+
+Below are a few points that will help you construct clear and concise changelog notes:
+* Use plain language, without technical jargon.
+Write your release notes like you are explaining them to a friend.
+* Keep them short.
+* If you’ve implemented a new feature, your changelog notes should contain a high-level summary of what it can do.
+But, of course, some more explanation on how to use it might be required, so provide a link to the detailed stuff, like a user guide, step-by-step instructions, etc.
+
+In general, your changelog notes should answer the following questions:
+* What has changed in the latest version of your product?
+* Why has that thing changed?
+* How does this change impact the user?
+* What does the user need to do differently as a result?
 
 ## Releases 🚀
 
