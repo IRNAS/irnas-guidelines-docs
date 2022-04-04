@@ -135,19 +135,19 @@ Some examples include:
 
 ## Versioning 1️⃣0️⃣0️⃣
 
-The versioning scheme consists of 3 numbers separated by dots:
+The versioning scheme consists of a letter `v`, followed by a 3 numbers separated by dots:
 ```
-{major}.{minor}.{bugfix}
+v{major}.{minor}.{bugfix}
 ```
 
 Following versions are all valid examples:
-* `0.1.4`
-* `0.9.3`
-* `0.9.10`
-* `1.0.0`
-* `1.1.0`
-* `1.12.45`
-* `5.0.0`
+* `v0.1.4`
+* `v0.9.3`
+* `v0.9.10`
+* `v1.0.0`
+* `v1.1.0`
+* `v1.12.45`
+* `v5.0.0`
 
 Numbering was inspired by [SemVer] convention.
 We deviate from their rules on version incrementing, as the SemVer convention makes more sense when you are developing libraries that are consumed by the developers and not in the sense of our product development.
@@ -157,11 +157,11 @@ Starting version and how it is incremented depends on the type of the project.
 ### Software/Firmware projects
 
 Given preceding versioning scheme increment:
-1. a`major` number when releasing a new, initial stable version of a product (`1.0.0`) or making any conceptual change, major rewrite, major documentation changes, a new generation of a product or any other change which requires additional human involvement.
+1. a`major` number when releasing a new, initial stable version of a product (`v1.0.0`) or making any conceptual change, major rewrite, major documentation changes, a new generation of a product or any other change which requires additional human involvement.
 2. a `minor` number when adding new features, enhancements, documentation in a backwards-compatible manner and
 3. a `bugfix` number when you make backwards-compatible bug fixes.
 
-New projects should start with a version `0.1.0` and continue from there.
+New projects should start with a version `v0.1.0` and continue from there.
 
 ### Hardware projects
 
@@ -170,7 +170,7 @@ Given preceding versioning scheme increment:
 2. a `minor` number for minor layout and schematic changes such as component value changes, layout routing, copper fills, etc.
 
 Number `bugfix` is never incremented and is always set to `0`.
-New projects should start with a version `1.0.0` and continue from there.
+New projects should start with a version `v1.0.0` and continue from there.
 
 ### Mechanical projects
 
@@ -179,7 +179,7 @@ Given preceding versioning scheme increment:
 2. a `minor` number for minor changes such as fixes, etc.
 
 Number `bugfix` is never incremented and is always set to `0`.
-New projects should start with a version `1.0.0` and continue from there.
+New projects should start with a version `v1.0.0` and continue from there.
 
 ## Changelog 📋
 
