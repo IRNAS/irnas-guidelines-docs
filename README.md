@@ -18,13 +18,17 @@ This repository contains guidelines related to various aspects of managing GitHu
 * [Repository naming scheme 📝](#repository-naming-scheme-)
     * [General rules](#general-rules)
     * [Naming scheme](#naming-scheme)
-* [Versioning and tagging 🏷️](#versioning-and-tagging-)
+* [Versioning 1️⃣0️⃣0️⃣](#versioning-1️⃣0️⃣0️⃣)
     * [Software/Firmware projects](#softwarefirmware-projects)
     * [Hardware projects](#hardware-projects)
     * [Mechanical projects](#mechanical-projects)
 * [Changelog 📋](#changelog-)
     * [Content of changelog notes](#content-of-changelog-notes)
+    * [Zepyhr drivers](#zepyhr-drivers)
 * [Releases 🚀](#releases-)
+    * [Tagging and naming releases](#tagging-and-naming-releases)
+    * [Release notes](#release-notes)
+    * [Creating releases](#creating-releases)
 * [Release artifacts naming scheme 📦](#release-artifacts-naming-scheme-)
     * [General rules](#general-rules-1)
     * [Naming scheme](#naming-scheme-1)
@@ -129,21 +133,21 @@ Some examples include:
 - `fabrikor-3dprinter-nrf52-firmware`
 - `irnas-guidelines-docs`
 
-## Versioning and tagging 🏷️
+## Versioning 1️⃣0️⃣0️⃣
 
-The versioning scheme consists of 3 numbers separated by dots:
+The versioning scheme consists of a letter `v`, followed by a 3 numbers separated by dots:
 ```
-{major}.{minor}.{bugfix}
+v{major}.{minor}.{bugfix}
 ```
 
 Following versions are all valid examples:
-* `0.1.4`
-* `0.9.3`
-* `0.9.10`
-* `1.0.0`
-* `1.1.0`
-* `1.12.45`
-* `5.0.0`
+* `v0.1.4`
+* `v0.9.3`
+* `v0.9.10`
+* `v1.0.0`
+* `v1.1.0`
+* `v1.12.45`
+* `v5.0.0`
 
 Numbering was inspired by [SemVer] convention.
 We deviate from their rules on version incrementing, as the SemVer convention makes more sense when you are developing libraries that are consumed by the developers and not in the sense of our product development.
@@ -153,11 +157,11 @@ Starting version and how it is incremented depends on the type of the project.
 ### Software/Firmware projects
 
 Given preceding versioning scheme increment:
-1. a`major` number when releasing a new, initial stable version of a product (`1.0.0`) or making any conceptual change, major rewrite, major documentation changes, a new generation of a product or any other change which requires additional human involvement.
+1. a`major` number when releasing a new, initial stable version of a product (`v1.0.0`) or making any conceptual change, major rewrite, major documentation changes, a new generation of a product or any other change which requires additional human involvement.
 2. a `minor` number when adding new features, enhancements, documentation in a backwards-compatible manner and
 3. a `bugfix` number when you make backwards-compatible bug fixes.
 
-New projects should start with a version `0.1.0` and continue from there.
+New projects should start with a version `v0.1.0` and continue from there.
 
 ### Hardware projects
 
@@ -166,7 +170,7 @@ Given preceding versioning scheme increment:
 2. a `minor` number for minor layout and schematic changes such as component value changes, layout routing, copper fills, etc.
 
 Number `bugfix` is never incremented and is always set to `0`.
-New projects should start with a version `1.0.0` and continue from there.
+New projects should start with a version `v1.0.0` and continue from there.
 
 ### Mechanical projects
 
@@ -175,7 +179,7 @@ Given preceding versioning scheme increment:
 2. a `minor` number for minor changes such as fixes, etc.
 
 Number `bugfix` is never incremented and is always set to `0`.
-New projects should start with a version `1.0.0` and continue from there.
+New projects should start with a version `v1.0.0` and continue from there.
 
 ## Changelog 📋
 
@@ -215,11 +219,55 @@ In general, your changelog notes should answer the following questions:
 * How does this change impact the user?
 * What does the user need to do differently as a result?
 
+### Zepyhr drivers
+
+When creating a version entry for a Zepyhr driver add a section which says on which NCS version was the driver built.
+This information should be visible to the developer which is deciding which version of driver to use so that it will work with its NCS version of the project.
+Use below template:
+```markdown
+
+### Compatibility
+
+-    This release was built and tested on NCS version <version>.
+```
+
 ## Releases 🚀
+
+Taken from https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases:
+
+> Releases are deployable software iterations you can package and make available for a wider audience to download and use.
+Releases are based on Git tags, which mark a specific point in your repository's history.
+A tag date may be different from a release date since they can be created at different times.
+
+GitHub release consists of a git tag, some text (commonly referred to as Release Notes) and artifacts (binaries, executables, any kind of documentation, etc.)
+
+### Tagging and naming releases
+
+Release tags and names consist of the letter `v` followed by a version number.
+
+Below tags are all valid examples:
+* `v0.1.4`
+* `v0.9.3`
+* `v1.0.0`
+* `v1.1.0`
+* `v1.12.45`
+* `v5.0.0`
+
+The name of a GitHub release should be identical to the tag that the release was created from.
+
+### Release notes
+
+Release notes are identical to the changelog notes for that specific version of a project and should be always kept in sync.
+
+### Creating releases
+
+Since we are following [GitFLow] branching model, a GitHub release is always created after a release branch is merged into the master branch and the tag has been created.
+
+This process can be/is automated with GitHub Actions.
 
 ## Release artifacts naming scheme 📦
 
-**Important** : this section is relevant only for software and firmware projects as the release process for meachnical and hardware projects still yet needs to be defined.
+**Important** : this section is relevant only for software and firmware projects as the release process for mechanical and hardware projects still yet needs to be defined.
 
 ### General rules
 
@@ -345,7 +393,6 @@ Documentation about the used test and validation processes can be found here: _e
 **This product version was superseded by the version _version number_. **
 ```
 
-
-
 [GitFlow]: https://nvie.com/posts/a-successful-git-branching-model
 [SemVer]: https://semver.org
+[Keep a Changelog's]: https://keepachangelog.com/en/1.0.0/
