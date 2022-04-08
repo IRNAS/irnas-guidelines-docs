@@ -299,7 +299,7 @@ Explanation of fields:
 
 Qualifiers come in several forms:
 
-* Misc qualifiers - examples: `log`, `dbg`, `dbgble` `rf`
+* Misc qualifiers - examples: `log`, `dbg`, `dbgble`, `rf`
 * 7 char Git hash - examples: `57fb962`, `a982467`, `6b3089c`
 
 #### Misc qualifiers
