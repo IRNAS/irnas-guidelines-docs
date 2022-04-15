@@ -224,6 +224,9 @@ In general, your changelog notes should answer the following questions:
 * How does this change impact the user?
 * What does the user need to do differently as a result?
 
+Keep in mind that in most cases a project manager will notify a customer about the new release and will also need to create a customer understandable abstract from the changelog notes.
+Write changelog notes in such a way so that is easy to write an abstract that communicates to the customer what value does a specific release bring to him.
+
 ### Zepyhr drivers
 
 When creating a version entry for a Zepyhr driver add a section which says on which NCS version was the driver built.
