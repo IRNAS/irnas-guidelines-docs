@@ -37,6 +37,9 @@ This repository contains guidelines related to various aspects of managing GitHu
         * [Git hash](#git-hash)
     * [Valid release objects names](#valid-release-objects-names)
 * [Production versions 🏭](#production-versions-)
+* [Documentation 📖](#documentation-)
+    * [Gitbook](#gitbook)
+    * [Github](#github)
 * [Resources 🤓](#resources-)
 
 <!-- vim-markdown-toc -->
@@ -120,6 +123,7 @@ Use only when specifying additional information that distinguishes codebases, su
     * `software` - software project, for example Python tooling or a web app,
     * `application` - Android/iOS application project,
     * `docs` - Project used just for the documentation.
+    * `master` - Master repo which ties together all other repos.
 
 It can happen that your new GitHub project does not fit preceding `repo_type` options, in that case, please describe it succinctly, in one word.
 
@@ -393,6 +397,50 @@ Documentation about the used test and validation processes can be found here: _e
 
 **This product version was superseded by the version _version number_. **
 ```
+
+## Documentation 📖
+
+There are two general places where project related documentation can exist:
+* GitBook
+* Github
+
+This section does not try to address documentation in the source code.
+That is a separate topic.
+
+### Gitbook
+
+Documentation on the Gitbook is meant to be mostly written by the managment.
+
+Things like:
+* project related notes and ideas,
+* mockups,
+* project timeline projections,
+* meeting notes,
+* concepts and
+* field research notes
+
+all belong on the Gitbook.
+
+Enginners and developers can also write to the GitBook vy specific instruction.
+
+### Github
+
+Documentation on the GitHub is meant to be mostly written by the engineers and developers.
+It is written in form of markdown files either in `README.md` or in `docs` folder.
+
+Things like:
+* setting up build enviroment,
+* instruction on how to create a release,
+* customer facing technical documentation,
+* getting started guide,
+* API documentation,
+* architecture diagrams,
+* block and flow diagrams and
+* power consumption reports
+
+all belong on the GitHub.
+
+When looking at the documentation from a point of a specific release, the documentation should be up to date and should reflect behaviour and implementation of the project at that point.
 
 ## Resources 🤓
 
