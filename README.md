@@ -37,6 +37,7 @@ This repository contains guidelines related to various aspects of managing GitHu
         * [Git hash](#git-hash)
     * [Valid release objects names](#valid-release-objects-names)
 * [Production versions 🏭](#production-versions-)
+* [Resources 🤓](#resources-)
 
 <!-- vim-markdown-toc -->
 
@@ -392,6 +393,35 @@ Documentation about the used test and validation processes can be found here: _e
 
 **This product version was superseded by the version _version number_. **
 ```
+
+## Resources 🤓
+
+Below section is a hot mess of links to various topics related to this document, embedded systems and more.
+
+Branching models/strategies/Git related:
+* [Trunk Based Development](https://trunkbaseddevelopment.com/) - Exhaustive website on a newer, better way to do Git Branching.
+* [Git Organised: A Better Git Flow](https://dev.to/render/git-organized-a-better-git-flow-56go) - Intersting article on how to sperate documenting git commits from coding.
+* [Git your reset on](https://changelog.com/podcast/480) - Podcast with the author of the above article.
+* [Pro Git Book](https://git-scm.com/book/en/v2) - The main resource for learning Git.
+* [Learn Git Branching](https://learngitbranching.js.org/) - Interactive browser game that helps you to learn Git branching.
+
+Versioning:
+* [SemVer](https://semver.org) - Versioning scheme used by many.
+* [CalVer](https://calver.org/) - Another versioning scheme used by many.
+* [zero0ver](https://0ver.org/) - Parody website on how many libraries misuse Semver.
+* [Giving Your Firmware Build a Version](https://embeddedartistry.com/blog/2016/12/21/giving-your-firmware-build-a-version/) - Good article from Embedded Artistry about versioning in firmware related context.
+* [Proper Release Versioning Goes a Long Way](https://interrupt.memfault.com/blog/release-versioning) - Another good article about versioning from Memfualt.
+
+Release naming:
+* [Release naming conventions](https://www.drupal.org/docs/develop/git/git-for-drupal-project-maintainers/release-naming-conventions) - Naming conventions used by Drupal.
+
+Changelog:
+* [What makes a good changelog?](https://depfu.com/blog/what-makes-a-good-changelog) - Writing a good changelog, like writing any text, is about knowing your audience and their needs.
+
+Awesome projects:
+* [Awesome embedded](https://github.com/nhivp/Awesome-Embedded) - A curated list of awesome embedded resources.
+* [Awesome C](https://github.com/oz123/awesome-c) - A curated list of C good stuff.
+* [Awesome Zephyr RTOS](https://github.com/golioth/awesome-zephyr-rtos) - A curated list of Zephyr related stuff.
 
 [GitFlow]: https://nvie.com/posts/a-successful-git-branching-model
 [SemVer]: https://semver.org
