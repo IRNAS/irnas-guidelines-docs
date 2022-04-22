@@ -18,3 +18,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 -   Section about releases.
 -   Section about resources.
 -   Section about documentation.
+-   Extra readme for `.clang-format`
