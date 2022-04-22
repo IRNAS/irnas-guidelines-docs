@@ -37,6 +37,10 @@ This repository contains guidelines related to various aspects of managing GitHu
         * [Git hash](#git-hash)
     * [Valid release objects names](#valid-release-objects-names)
 * [Production versions 🏭](#production-versions-)
+* [Documentation 📖](#documentation-)
+    * [Gitbook](#gitbook)
+    * [Github](#github)
+* [Resources 🤓](#resources-)
 
 <!-- vim-markdown-toc -->
 
@@ -119,6 +123,7 @@ Use only when specifying additional information that distinguishes codebases, su
     * `software` - software project, for example Python tooling or a web app,
     * `application` - Android/iOS application project,
     * `docs` - Project used just for the documentation.
+    * `master` - Master repo which ties together all other repos.
 
 It can happen that your new GitHub project does not fit preceding `repo_type` options, in that case, please describe it succinctly, in one word.
 
@@ -218,6 +223,9 @@ In general, your changelog notes should answer the following questions:
 * Why has that thing changed?
 * How does this change impact the user?
 * What does the user need to do differently as a result?
+
+Keep in mind that in most cases a project manager will notify a customer about the new release and will also need to create a customer understandable abstract from the changelog notes.
+Write changelog notes in such a way so that is easy to write an abstract that communicates to the customer what value does a specific release bring to him.
 
 ### Zepyhr drivers
 
@@ -392,6 +400,79 @@ Documentation about the used test and validation processes can be found here: _e
 
 **This product version was superseded by the version _version number_. **
 ```
+
+## Documentation 📖
+
+There are two general places where project related documentation can exist:
+* GitBook
+* Github
+
+This section does not try to address documentation in the source code.
+That is a separate topic.
+
+### Gitbook
+
+Documentation on the Gitbook is meant to be mostly written by the managment.
+
+Things like:
+* project related notes and ideas,
+* mockups,
+* project timeline projections,
+* meeting notes,
+* concepts and
+* field research notes
+
+all belong on the Gitbook.
+
+Enginners and developers can also write to the GitBook vy specific instruction.
+
+### Github
+
+Documentation on the GitHub is meant to be mostly written by the engineers and developers.
+It is written in form of markdown files either in `README.md` or in `docs` folder.
+
+Things like:
+* setting up build enviroment,
+* instruction on how to create a release,
+* customer facing technical documentation,
+* getting started guide,
+* API documentation,
+* architecture diagrams,
+* block and flow diagrams and
+* power consumption reports
+
+all belong on the GitHub.
+
+When looking at the documentation from a point of a specific release, the documentation should be up to date and should reflect behaviour and implementation of the project at that point.
+
+## Resources 🤓
+
+Below section is a hot mess of links to various topics related to this document, embedded systems and more.
+
+Branching models/strategies/Git related:
+* [Trunk Based Development](https://trunkbaseddevelopment.com/) - Exhaustive website on a newer, better way to do Git Branching.
+* [Git Organised: A Better Git Flow](https://dev.to/render/git-organized-a-better-git-flow-56go) - Intersting article on how to sperate documenting git commits from coding.
+* [Git your reset on](https://changelog.com/podcast/480) - Podcast with the author of the above article.
+* [Pro Git Book](https://git-scm.com/book/en/v2) - The main resource for learning Git.
+* [Learn Git Branching](https://learngitbranching.js.org/) - Interactive browser game that helps you to learn Git branching.
+
+Versioning:
+* [SemVer](https://semver.org) - Versioning scheme used by many.
+* [CalVer](https://calver.org/) - Another versioning scheme used by many.
+* [zero0ver](https://0ver.org/) - Parody website on how many libraries misuse Semver.
+* [Giving Your Firmware Build a Version](https://embeddedartistry.com/blog/2016/12/21/giving-your-firmware-build-a-version/) - Good article from Embedded Artistry about versioning in firmware related context.
+* [Proper Release Versioning Goes a Long Way](https://interrupt.memfault.com/blog/release-versioning) - Another good article about versioning from Memfualt.
+
+Release naming:
+* [Release naming conventions](https://www.drupal.org/docs/develop/git/git-for-drupal-project-maintainers/release-naming-conventions) - Naming conventions used by Drupal.
+
+Changelog:
+* [What makes a good changelog?](https://depfu.com/blog/what-makes-a-good-changelog) - Writing a good changelog, like writing any text, is about knowing your audience and their needs.
+
+Awesome projects:
+* [Awesome embedded](https://github.com/nhivp/Awesome-Embedded) - A curated list of awesome embedded resources.
+* [Awesome C](https://github.com/oz123/awesome-c) - A curated list of C good stuff.
+* [Awesome Zephyr RTOS](https://github.com/golioth/awesome-zephyr-rtos) - A curated list of Zephyr related stuff.
 
 [GitFlow]: https://nvie.com/posts/a-successful-git-branching-model
 [SemVer]: https://semver.org
