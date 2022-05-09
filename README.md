@@ -424,7 +424,7 @@ Things like:
 
 all belong on the Gitbook.
 
-Enginners and developers can also write to the GitBook vy specific instruction.
+Enginners and developers can also write to the GitBook on specific instructions.
 
 ### Github
 
