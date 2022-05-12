@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [0.1.0] - 2022-05-12
+
 ### Added
 
 -   `CHANGELOG` file.
@@ -19,3 +21,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 -   Section about resources.
 -   Section about documentation.
 -   Extra readme for `.clang-format`
+
+[Unreleased]: https://github.com/IRNAS/irnas-guidelines-docs/compare/v0.1.0...HEAD
+
+[0.1.0]: https://github.com/IRNAS/irnas-guidelines-docs/compare/72adf4ac813c1915181b3cf15993ee44d90fa3ea...v0.1.0
