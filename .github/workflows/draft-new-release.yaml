@@ -116,6 +116,7 @@ jobs:
           * Pull the created branch to local machine with: <code>git pull origin/${{ github.event.inputs.release-type }}/${{ github.event.inputs.version }}</code> and perform last-minute changes. **Do not forget to commit and push.**
 
           After merging this PR to the <code>master</code> you **HAVE** to:
+          * Delete release branch <code>${{ github.event.inputs.release-type }}/${{ github.event.inputs.version }}</code>
           * Merge the second PR to the <code>dev</code> branch to retain release specific changes.
 
           ## :clipboard: Changelog
