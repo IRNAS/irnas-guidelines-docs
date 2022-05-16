@@ -19,6 +19,7 @@ code --install-extension xaver.clang-format
 ```json
     "clang-format.executable": "/usr/bin/clang-format-14",
     "[c]": {
+        "editor.defaultForamtter": "xaver.clang-format",
         "editor.detectIndentation": false,
         "editor.tabSize": 8,
         "editor.insertSpaces": false,
