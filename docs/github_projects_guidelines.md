@@ -42,7 +42,7 @@ This document describes guidelines and recomendations that should be used when w
 ## Branching model 🌲
 
 <p align="center">
-  <img src="images/gitflow-atlassian.svg" alt="gitflow" width=600 ><br><br>
+  <img src="../images/gitflow-atlassian.svg" alt="gitflow" width=600 ><br><br>
     <i>GitFlow branching diagram, source: <a href="https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow">Atlassian</a></i><br>
 
 </p>
