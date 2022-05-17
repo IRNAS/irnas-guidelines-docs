@@ -33,4 +33,3 @@ For the latest stable version click release badge above.
 [Clang Format]: clang-format/README.md
 [Github Action workflows]: https://github.com/IRNAS/irnas-workflows-software
 [Generic project template]: https://github.com/IRNAS/irnas-projects-template
-[Zephyr project template] - Used for creating a new Zephyr project, 🚧 **currently under construction** 🚧.
