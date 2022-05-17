@@ -266,7 +266,8 @@ Release notes are identical to the changelog notes for that specific version of 
 
 Since we are following [GitFLow] branching model, a GitHub release is always created after a release branch is merged into the master branch and the tag has been created.
 
-This process can be/is automated with GitHub Actions.
+This process /is automated with GitHub Actions with "Basic" group of workflow files.
+More about this [here](https://github.com/IRNAS/irnas-workflows-software).
 
 ## Release artifacts naming scheme 📦
 
