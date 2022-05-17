@@ -354,6 +354,9 @@ Firmware project with application and bootloader firmwares, and various sets of 
 
 ## Production versions 🏭
 
+<!-- TODO: Remove this when resolved  -->
+**Warning ⚠️**: this section should not be implemented, as it is depended on the entire project management workflow and it might be removed.
+
 Some versions of the project will be used in the production environment.
 The production environment is a final destination where the project will be put into operation and thus will be used by the end-users.
 To ensure that the project works in production it should go through testing and validation processes that are specific to that project.
