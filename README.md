@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/irnas-logo.png" alt="irnas-logo" width=400 ><br><br>
+  <img src="images/irnas-logo.png" alt="irnas-logo" ><br><br>
 </p>
 
 
