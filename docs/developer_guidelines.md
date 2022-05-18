@@ -28,7 +28,7 @@ Resources:
 
 ### Message style
 
-There are two possible style for a commit message: short and full.
+There are two possible styles for a commit message: short and full.
 
 Short commit message should be around 50 characters long, maximum is at 72.
 
@@ -50,13 +50,14 @@ Below is a visual repesentation of the full message format:
 ```
 Summarize changes in around 50 characters or less
 
-More detailed explanatory text, if necessary. Wrap it to about 72
-characters or so, editors like Visual Studio Code and Vim do this
-automatically. Treat the first line as the subject of the commit
-and the rest of the text as the body. The blank line separating
-the summary from the body is critical (unless you omit the body
-entirely); various tools like `log`, `shortlog` and `rebase` can
-get confused if you run the two together.
+More detailed explanatory text, if necessary, it can be only a
+sentence or two. Wrap it to about 72 characters or so, editors
+like Visual Studio Code and Vim do this automatically. Treat
+the first line as the subject of the commit and the rest of the
+text as the body. The blank line separating the summary from the
+body is critical (unless you omit the body entirely); various
+tools like `log`, `shortlog` and `rebase` can get confused if
+you run the two together.
 
 Explanatory text can be split into several paragraphs.
 
