@@ -6,7 +6,9 @@
 
 * [Commits 🪢](#commits-)
     * [Message style](#message-style)
-    * [Message content](#message-content)
+        * [Short](#short)
+        * [Full](#full)
+    * [Commit and message content](#commit-and-message-content)
 * [Documentation in source code 📑](#documentation-in-source-code-)
 * [Coding standards 📚](#coding-standards-)
     * [C/C++ 🇨](#cc-)
@@ -23,27 +25,35 @@ This section outlines general ideas to follow when making commits and writing co
 A lot has been said on this topic, so it is best to refer to resources and then highlight important points.
 
 Resources:
-* [Source control commit guidelines by Embedded Artistry] - Main resource related to the commit content and message content. Read this **first**, before reading the rest.
+* [Source control commit guidelines by Embedded Artistry] - Main resource related to the commit content and message content. **Read this first, before reading the rest**.
 * [One Idea is One Commit] - Interesting commiting strategy, similiar to atomic commits.
 
 ### Message style
 
-There are two possible styles for a commit message: short and full.
+There are two possible styles for the commit messages: short and full.
 
-Short commit message should be around 50 characters long, maximum is at 72.
+#### Short
+
+Short commit messages should be around 50 characters long, maximum is at 72.
 
 Use this when the change that you made is either:
-* self-explanatory - For example: `Fix typo in README.md` or
-* there is a GitHub issue that provides full context for the change made, for example: `Fix out of bounds bug, closes #123`
+* self-explanatory, for example: `Fix typo in README.md` or
+* there is a GitHub issue that provides sufficient context for the change made.
+
+Relevant Github issues are to be mentioned at the end of the message, for example:
+* `Fix out of bounds bug, closes #123`
+* `Add shell module, relevant #456`
+
+#### Full
 
 Full commit message style is best summarized with below rules:
 
-* Separate subject from body with a blank line
-* Limit the subject line to 50 characters
-* Capitalize the subject line
-* Do not end the subject line with a period
-* Use the imperative mood in the subject line
-* Wrap the body at 72 characters
+* Separate subject from body with a blank line.
+* Limit the subject line to 50 characters.
+* Capitalize the subject line.
+* Do not end the subject line with a period.
+* Use the imperative mood in the subject line, for example: use "Add", "Change" and "Remove" instead of "Added", "Changed", "Removed".
+* Wrap the body at 72 characters.
 
 Below is a visual repesentation of the full message format:
 
@@ -72,9 +82,40 @@ Resolves: #123
 See also: #456, #789
 ```
 
+### Commit and message content
 
-### Message content
+Below sections are copied directly from [Source control commit guidelines by Embedded Artistry].
 
+About content of the commits:
+
+> 1. All changes in a commit should be related.
+>   * Don’t combine changes that address different problems into a single
+>     commit.
+> 2. All changes in a commit should address a single aspect of a problem or
+>    change.
+>   * Don’t be afraid to break up a new feature, bug fix, or refactoring effort
+>     into multiple distinct changes.
+>   * This will help you keep track of what works and what doesn’t: if there’s
+>     a problem, you can always revert back to the last known good state. If
+>     you wait too long between commits, you may lose a lot of work or spend
+>     too long finding the source of the problem.
+> 3. Prefer small commits to large commits.
+>   * This helps reviewers by allowing them to focus on a small set of related
+>     changes.
+>   * This helps future debugging efforts by increasing the probability that a
+>     git bisect operation will quickly identify the source of the problem.
+
+About content of the commits messages:
+
+> Most importantly, the commit message body should be used to explain what you
+> are doing and why you did it that way, rather than how you did it. The code
+> itself serves to explain the how. Focus on side effects, compatibility changes,
+> or other consequences that are not immediately obvious from reviewing the code.
+> Also include any important factors that helped you arrive at your particular
+> approach.
+>
+> Not all commit messages require both a subject and a body. You can include only
+> a subject if it is sufficient for a given commit.
 
 ## Documentation in source code 📑
 
