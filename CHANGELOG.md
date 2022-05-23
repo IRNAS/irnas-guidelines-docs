@@ -10,6 +10,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 -   Sections about code standards, code styles, documentation guidelines for C/C++, Python and Rust.
 -   File templates for C/C++ and Python.
+-   New document related to developer specific guidelines can be found in
+    `docs/developer_guidelines.md`. It contains section about commits.
+-   Documentation related to `gitlint` tool, it can be found in
+    `tools/gitlint`.
+
+### Changed
+
+-   General project structure. Main README.md now serves as a landing page,
+    from where users can jump to other documents. Contents of the old README
+    were moved to `docs/github_project_guidelines.md`.
+-   Various documents related to tooling, such as clang-format and gitlint, are
+    now in `tools` directory.
 
 ## [0.1.0] - 2022-05-12
 

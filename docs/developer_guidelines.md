@@ -40,6 +40,8 @@ Resources:
 * [Source control commit guidelines by Embedded Artistry] - Main resource related to the commit content and message content. **Read this first, before reading the rest**.
 * [One Idea is One Commit] - Interesting commiting strategy, similiar to atomic commits.
 
+Use `gitlint` tool to check your commit messages. See [tools/gitlint/README.md] for more information.
+
 ### Message style
 
 There are two possible styles for the commit messages: short and full.
@@ -446,3 +448,4 @@ sudo chmod +x <script>
 [Doxygen]: https://www.doxygen.nl/
 [nRF Connect SDK's Doxygen guidelines]: https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/doc_styleguide.html#doxygen-gl
 [template files]: source_code_templates
+[tools/gitlint/README.md]: ../tools/gitlint/README.md
