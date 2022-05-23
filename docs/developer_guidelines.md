@@ -28,6 +28,8 @@ Resources:
 * [Source control commit guidelines by Embedded Artistry] - Main resource related to the commit content and message content. **Read this first, before reading the rest**.
 * [One Idea is One Commit] - Interesting commiting strategy, similiar to atomic commits.
 
+Use `gitlint` tool to check your commit messages. See [tools/gitlint/README.md] for more information.
+
 ### Message style
 
 There are two possible styles for the commit messages: short and full.
@@ -131,3 +133,4 @@ About content of the commits messages:
 
 [Source control commit guidelines by Embedded Artistry]: https://embeddedartistry.com/fieldatlas/source-control-commit-guidelines/
 [One Idea is One Commit]: https://secure.phabricator.com/book/phabflavor/article/recommendations_on_revision_control/
+[tools/gitlint/README.md]: ../tools/gitlint/README.md
