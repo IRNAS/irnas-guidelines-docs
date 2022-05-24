@@ -8,6 +8,7 @@
  * examples.
  * If this is a driver level module include link to the datasheet.
  *
+ * @par
  * Created by IRNAS, more info at: https://www.irnas.eu/
  */
 

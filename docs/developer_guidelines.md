@@ -104,7 +104,7 @@ Considers header files to be “data sheets”. In the header files, you want to
 summarize:
 * what the function does,
 * what are its inputs and outputs,
-* what are the required precondition and
+* what are the required preconditions and
 * what are the possible side effects.
 
 The goal is that comments provide enough information to the programmer so that
