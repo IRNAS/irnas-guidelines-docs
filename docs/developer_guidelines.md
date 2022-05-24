@@ -127,6 +127,32 @@ Concretely this means:
 * Add single or multi-line comments before tricky or non-obvious parts in code.
   Describe what and why the code is trying to do, not how is doing it.
 
+See below snippet for an example of good documentation from Zephyr codebase:
+```c
+/**
+ * @brief Lock a mutex.
+ *
+ * This routine locks @a mutex. If the mutex is locked by another thread,
+ * the calling thread waits until the mutex becomes available or until
+ * a timeout occurs.
+ *
+ * A thread is permitted to lock a mutex it has already locked. The operation
+ * completes immediately and the lock count is increased by 1.
+ *
+ * Mutexes may not be locked in ISRs.
+ *
+ * @param mutex Address of the mutex.
+ * @param timeout Waiting period to lock the mutex,
+ *                or one of the special values K_NO_WAIT and
+ *                K_FOREVER.
+ *
+ * @retval 0 Mutex locked.
+ * @retval -EBUSY Returned without waiting.
+ * @retval -EAGAIN Waiting period timed out.
+ */
+__syscall int k_mutex_lock(struct k_mutex *mutex, k_timeout_t timeout);
+```
+
 #### Doxygen guidelines
 
 For documenting the code constructs use [Doxygen] style comments. The structure
@@ -234,6 +260,40 @@ black {some file or directory that you want to format} --line-length 100 --previ
 Follow [Google's Python Style Guide], section _3.8 Comments and Docstrings_.
 
 Use the `python_template.py` file as a starting point.
+
+See below snippet for an example of good documentation from TensorFlow codebase:
+```python
+@keras_export(v1=['keras.__internal__.legacy.layers.average_pooling2d'])
+@tf_export(v1=['layers.average_pooling2d'])
+def average_pooling2d(inputs,
+                      pool_size, strides,
+                      padding='valid', data_format='channels_last',
+                      name=None):
+  """Average pooling layer for 2D inputs (e.g. images).
+  Args:
+    inputs: The tensor over which to pool. Must have rank 4.
+    pool_size: An integer or tuple/list of 2 integers: (pool_height, pool_width)
+      specifying the size of the pooling window.
+      Can be a single integer to specify the same value for
+      all spatial dimensions.
+    strides: An integer or tuple/list of 2 integers,
+      specifying the strides of the pooling operation.
+      Can be a single integer to specify the same value for
+      all spatial dimensions.
+    padding: A string. The padding method, either 'valid' or 'same'.
+      Case-insensitive.
+    data_format: A string. The ordering of the dimensions in the inputs.
+      `channels_last` (default) and `channels_first` are supported.
+      `channels_last` corresponds to inputs with shape
+      `(batch, height, width, channels)` while `channels_first` corresponds to
+      inputs with shape `(batch, channels, height, width)`.
+    name: A string, the name of the layer.
+  Returns:
+    Output tensor.
+  Raises:
+    ValueError: if eager execution is enabled.
+  """
+```
 
 ### Rust 🦀
 
