@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 
 -   Sections about code standards, code styles, documentation guidelines for C/C++, Python and Rust.
+-   File templates for C/C++ and Python.
 
 ## [0.1.0] - 2022-05-12
 
