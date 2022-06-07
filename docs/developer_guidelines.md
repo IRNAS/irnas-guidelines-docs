@@ -64,7 +64,7 @@ Mention relevant GitHub issues at the end of the message, for example:
 
 #### Full
 
-Whenever the change you made needs more context you should you full message
+Whenever the change you made needs more context you should use full message
 format.
 
 The full message format is best summarized with the below rules:
@@ -113,7 +113,7 @@ About content of the commits:
 
 > 1. All changes in a commit should be related.
 >    * Don’t combine changes that address different problems into a single
->     commit.
+>      commit.
 > 2. All changes in a commit should address a single aspect of a problem or
 >    change.
 >    * Don’t be afraid to break up a new feature, bug fix, or refactoring
@@ -161,10 +161,10 @@ to how the function should be used (try to avoid this if you can). Do not
 duplicate information in multiple places in the code.
 
 Concretely this means:
-* Provide description of the module at the top of the header file. Optionally,
-  add a brief description of functions and/or usage examples. If documenting a
-  driver level module, include a link to the datasheet and mention relevant
-  sections. See [template files] in this repository for examples.
+* Describe the module at the top of the header file. Optionally, add a brief
+  description of functions and/or usage examples. If documenting a driver level
+  module, include a link to the datasheet and mention relevant sections. See
+  [template files] in this repository for examples.
 * Document all externally visible constructs in the header files. Always
   comment functions, function-like macros, structs and enums. You can omit
   comments of macro defines and constants if their use and meaning are obvious.
@@ -174,7 +174,8 @@ Concretely this means:
 * Add single or multi-line comments before tricky or non-obvious parts in code.
   Describe what and why the code is trying to do, not how is doing it.
 
-See below snippet for an example of good documentation from Zephyr codebase:
+See the below snippet for an example of good documentation from the Zephyr
+codebase:
 ```c
 /**
  * @brief Lock a mutex.
@@ -205,7 +206,7 @@ __syscall int k_mutex_lock(struct k_mutex *mutex, k_timeout_t timeout);
 For documenting the code constructs use [Doxygen] style comments. The structure
 of these is defined by [nRF Connect SDK's Doxygen guidelines]. Follow these
 guidelines completely, except for the _File headers and groups_ section, for an
-example of a file header refer to `c_cpp_template.h` file.
+example of a file header refer to the `c_cpp_template.h` file.
 
 #### Coding style
 
@@ -215,7 +216,7 @@ Follow [Zephyr's Coding Style]. Zephyr's Coding Style generally follows of a
 Almost all sections in the Linux kernel coding style are relevant to firmware
 programming, some might need minor changes to become relevant:
 * [Printing kernel messages] - Replace kernel messages with log messages.
-* [Allocating memory] - Contains mentions to kernel specific memory allocators,
+* [Allocating memory] - Contains mentions of kernel specific memory allocators,
   but, the advice still applies.
 * [The inline disease] - Again, somewhat kernel specific, we rarely use
   `inline` keyword in our code, but, the advice still applies.
@@ -327,7 +328,7 @@ def average_pooling2d(inputs,
       specifying the strides of the pooling operation.
       Can be a single integer to specify the same value for
       all spatial dimensions.
-    padding: A string. The padding method, either 'valid' or 'same'.
+    padding: A string. The padding method is either 'valid' or 'same'.
       Case-insensitive.
     data_format: A string. The ordering of the dimensions in the inputs.
       `channels_last` (default) and `channels_first` are supported.
@@ -412,8 +413,8 @@ fi
 
 #### Shebang lines
 
-For Python or Bash scripts that you will execute directly specify the shebang line
-in the first line of the file.
+For Python or Bash scripts that you will execute directly specify the shebang
+line in the first line of the file.
 
 For Python2:
 ```python
@@ -430,9 +431,9 @@ For Bash:
 #! /usr/bin/env bash
 ```
 
-In that way, you can call the script directly, without specifying an interpreter
-first. The script needs to have to execute permissions for this to work, you can
-do that with:
+In that way, you can call the script directly, without specifying an
+interpreter first. The script needs to have to execute permissions for this to
+work, you can do that with:
 ```bash
 sudo chmod +x <script>
 ```
