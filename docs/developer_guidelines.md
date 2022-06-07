@@ -298,7 +298,6 @@ Black is a PEP8 compliant opinionated formatter with a limited set of
 configurable options.
 
 We slightly deviate from Black's default code style:
-* We increase the maximum number of characters from 88 to 100.
 * We use an improved string processing feature, which splits long string
   literals and merges short ones, more about this
   [here](https://black.readthedocs.io/en/stable/the_black_code_style/future_style.html).
@@ -306,7 +305,7 @@ We slightly deviate from Black's default code style:
 This means that you need to add a few extra arguments when using Black from the
 command-line or from your favourite editor:
 ```bash
-black {some file or directory that you want to format} --line-length 100 --preview
+black {some file or directory that you want to format} --preview
 ```
 
 #### Docstrings
