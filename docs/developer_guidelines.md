@@ -107,8 +107,8 @@ See also: #456, #789
 
 ### Commit and message content
 
-The below sections are copied directly from [Source control commit guidelines
-by Embedded Artistry].
+The below sections are copied directly from [Source control commit guidelines by
+Embedded Artistry].
 
 About content of the commits:
 
@@ -159,20 +159,20 @@ summarize:
 
 The goal is that comments provide enough information to the programmer so that
 he can use the module without reading its implementation. Do not document
-implementation details in the header files, unless those details are relevant
-to how the function should be used (try to avoid this if you can). Do not
-duplicate information in multiple places in the code.
+implementation details in the header files, unless those details are relevant to
+how the function should be used (try to avoid this if you can). Do not duplicate
+information in multiple places in the code.
 
 Concretely this means:
 * Describe the module at the top of the header file. Optionally, add a brief
   description of functions and/or usage examples. If documenting a driver level
   module, include a link to the datasheet and mention relevant sections. See
   [template files] in this repository for examples.
-* Document all externally visible constructs in the header files. Always
-  comment functions, function-like macros, structs and enums. You can omit
-  comments of macro defines and constants if their use and meaning are obvious.
-* Don't document internally visible static functions, or function-like macros
-  if they are very short and obvious. The same goes for the structs, enum, and
+* Document all externally visible constructs in the header files. Always comment
+  functions, function-like macros, structs and enums. You can omit comments of
+  macro defines and constants if their use and meaning are obvious.
+* Don't document internally visible static functions, or function-like macros if
+  they are very short and obvious. The same goes for the structs, enum, and
   macro defines.
 * Add single or multi-line comments before tricky or non-obvious parts in code.
   Describe what and why the code is trying to do, not how is doing it.
@@ -221,8 +221,8 @@ programming, some might need minor changes to become relevant:
 * [Printing kernel messages] - Replace kernel messages with log messages.
 * [Allocating memory] - Contains mentions of kernel specific memory allocators,
   but, the advice still applies.
-* [The inline disease] - Again, somewhat kernel specific, we rarely use
-  `inline` keyword in our code, but, the advice still applies.
+* [The inline disease] - Again, somewhat kernel specific, we rarely use `inline`
+  keyword in our code, but, the advice still applies.
 
 #### Include statements
 
@@ -233,9 +233,9 @@ header guards and `extern C` guards.
 Include only what is necessary to compile the source code. Adding unnecessary
 includes means a longer compilation time, especially in large projects. Each
 header and corresponding source file should compile cleanly on its own. That
-means, if you have a source file that includes only the corresponding header,
-it should compile without errors. The header file should include not more than
-what is necessary for that.
+means, if you have a source file that includes only the corresponding header, it
+should compile without errors. The header file should include not more than what
+is necessary for that.
 
 Include statements belonging to the same include group should be written
 together with no space in the between, ordered alphabetically(`clang-format`
@@ -369,21 +369,21 @@ comprehensive document refers to the [rustdoc book].
 
 #### Documentation
 
-Short scripts in written Python or Bash are often used to automate a simple
-task or process some data. Those types of programs are not required to comment
-on every internal function or class, as Google's Python Style Guide suggests
-for example.
+Short scripts in written Python or Bash are often used to automate a simple task
+or process some data. Those types of programs are not required to comment on
+every internal function or class, as Google's Python Style Guide suggests for
+example.
 
 The most important documentation that these scripts need to have is **what they
 do** and **how to use them**.
 
 These instructions have to be provided to the user when he calls the program
-with the `--help` flag or after incorrect use. If the program is simple
-enough and `argparse` or similar command-line parsing modules are not used then
+with the `--help` flag or after incorrect use. If the program is simple enough
+and `argparse` or similar command-line parsing modules are not used then
 instructions need to be written at the top of the file in the comments.
 
-There is a way to generate help strings in Bash scripts from the comments at
-the top of the file. In the below example the script will return text from the
+There is a way to generate help strings in Bash scripts from the comments at the
+top of the file. In the below example the script will return text from the
 second line to the end of the comment section if the user gives a `--help` flag
 or an insufficient number of arguments.
 
