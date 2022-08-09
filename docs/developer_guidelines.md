@@ -9,6 +9,7 @@
         * [Short](#short)
         * [Full](#full)
     * [Commit and message content](#commit-and-message-content)
+* [Coding standards 📚](#coding-standards-)
     * [C/C++ 🇨](#cc-)
         * [Source code documentation](#source-code-documentation)
         * [Doxygen guidelines](#doxygen-guidelines)
@@ -139,6 +140,8 @@ About content of the commits messages:
 >
 > Not all commit messages require both a subject and a body. You can include
 > only a subject if it is sufficient for a given commit.
+
+## Coding standards 📚
 
 ### C/C++ 🇨
 
@@ -367,22 +370,22 @@ comprehensive document refers to the [rustdoc book].
 #### Documentation
 
 Short scripts in written Python or Bash are often used to automate a simple
-task or process some data. Those types of programs are not required to
-comment on every internal function or class, as Google's Python Style Guide
-suggests for example.
+task or process some data. Those types of programs are not required to comment
+on every internal function or class, as Google's Python Style Guide suggests
+for example.
 
 The most important documentation that these scripts need to have is **what they
 do** and **how to use them**.
 
 These instructions have to be provided to the user when he calls the program
-with the `--help` flag or when after incorrect use. If the program is simple enough and
-`argparse` or similar command-line parsing modules are not used then
+with the `--help` flag or after incorrect use. If the program is simple
+enough and `argparse` or similar command-line parsing modules are not used then
 instructions need to be written at the top of the file in the comments.
 
 There is a way to generate help strings in Bash scripts from the comments at
-the top of the file. In the below example the script will return text from
-the second line to the end of the comment section if the user gives a `--help` flag or
-an insufficient number of arguments.
+the top of the file. In the below example the script will return text from the
+second line to the end of the comment section if the user gives a `--help` flag
+or an insufficient number of arguments.
 
 ```bash
 #!/usr/bin/env bash
