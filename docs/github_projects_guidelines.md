@@ -30,6 +30,9 @@ working with projects hosted on GitHub.
         * [Misc qualifiers](#misc-qualifiers)
         * [Git hash](#git-hash)
     * [Valid release objects names](#valid-release-objects-names)
+* [GitHub labels management 🏷️](#github-labels-management-)
+    * [Usage](#usage)
+    * [Exporting labels to a project](#exporting-labels-to-a-project)
 * [Production versions 🏭](#production-versions-)
 * [Documentation 📖](#documentation-)
     * [Gitbook](#gitbook)
@@ -416,6 +419,71 @@ build flags:
     - `largerobot-app-hv1.4.0-v1.0.0-rf.hex`
     - `largerobot-bl-hv1.0.0-v1.0.0-rf.hex`
 
+
+## GitHub labels management 🏷️
+
+What are GitHub labels? From [GitHub's docs]:
+> You can manage your work on GitHub by creating labels to categorize issues,
+> pull requests, and discussions. You can apply labels in the repository the
+> label was created in. Once a label exists, you can use the label on any issue,
+> pull request, or discussion within that repository.
+
+To organize and categorize issues we use a set of labels that are defined in the
+[irnas-project-template] repository.
+
+When creating a new project labels are automatically transferred if the new the
+project used the `irnas-project-template` repository as a template.
+
+If you want to use the labels in a project that was not created from the above
+the template then read the next section.
+
+### Usage
+
+Below are some guidelines regarding the usage of labels:
+* An Issue/PR without labels should not require labels to attract attention,
+  therefore the default state should be label-less.
+* Most of the labels have prefixes that organize them into groups:
+    * `priority` - describes the immediacy of the attention required.
+    * `state` - describes the decision state of the issue or pull request.
+    * `type` - describes the type of the issue or pull request.
+* Issue should have a maximum of one label per group.
+* Some labels do not have prefixes, specifically `pull request` and `release` as
+  they are created by the templates/CI.
+
+Please note that the above guidelines are exactly that, guidelines, and not
+rules. If your project requires a different set of labels, uses additional
+groups, etc. then fell free to break the guidelines.
+
+### Exporting labels to a project
+
+To export labels from `irnas-project-template` to your you will need to install
+and use GitHub's `gh` command line tool.
+
+Install `gh` on Ubuntu by running the below commands:
+```bash
+curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+&& sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+&& sudo apt update \
+&& sudo apt install gh -y
+```
+
+Authenticate `gh` tool so it can communicate with GitHub:
+```bash
+gh auth login
+```
+_The easiest way is to just press enter on every choice and confirm in the web
+browser._
+
+To clone the labels from the template project to a project of your choice:
+```bash
+gh label clone IRNAS/irnas-projects-template --repo IRNAS/<repo_of_your_choice>
+```
+
+**Important:** Above command will only copy new labels to the destination repo.
+Existing labels in the destination repository will not be modified or deleted.
+To overwrite existing labels use `--force` flag.
+
 ## Production versions 🏭
 
 <!-- TODO: Remove this when resolved  -->
@@ -579,3 +647,5 @@ Awesome projects:
 [GitFlow]: https://nvie.com/posts/a-successful-git-branching-model
 [SemVer]: https://semver.org
 [Keep a Changelog's]: https://keepachangelog.com/en/1.0.0/
+[GitHub's docs]: https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels
+[irnas-project-template]: https://github.com/IRNAS/irnas-projects-template/labels
