@@ -19,6 +19,7 @@ For the latest stable version click release badge above.
 * [GitHub projects guidelines] - Describes general guidelines that are used across GitHub projects.
 * [Developer guidelines] - Describes guidelines specific to developers that should be followed when working on software/firmware projects.
 * [Clang Format] - Document dedicated to setting up the `clang-format` tool.
+* [Gitlint] - Document dedicated to setting up the `gitlint` tool.
 
 ## Other repositores 🌍
 
@@ -38,7 +39,8 @@ This work is licensed under a
 
 [GitHub projects guidelines]: docs/github_projects_guidelines.md
 [Developer guidelines]: docs/developer_guidelines.md
-[Clang Format]: clang-format/README.md
+[Clang Format]: tools/clang-format/README.md
+[Gitlint]: tools/gitlint/README.md
 [Github Action workflows]: https://github.com/IRNAS/irnas-workflows-software
 [Generic project template]: https://github.com/IRNAS/irnas-projects-template
 [release-shield]: https://img.shields.io/github/v/release/irnas/irnas-guidelines-docs?color=g&label=latest%20release
