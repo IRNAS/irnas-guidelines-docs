@@ -8,12 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
--   Sections about code standards, code styles, documentation guidelines for C/C++, Python and Rust.
+-   Sections about code standards, code styles, documentation guidelines for
+    C/C++, Python and Rust.
 -   File templates for C/C++ and Python.
 -   New document related to developer specific guidelines can be found in
     `docs/developer_guidelines.md`. It contains section about commits.
 -   Documentation related to `gitlint` tool, it can be found in
     `tools/gitlint`.
+-   Section about GitHub labels.
 
 ### Changed
 
