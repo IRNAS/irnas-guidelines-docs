@@ -1,8 +1,8 @@
 {
     "env": {
+        "browser": true,
         "es2021": true,
         "node": true,
-        "react-native/react-native": true,
         "jest": true
     },
     "extends": [
@@ -10,8 +10,7 @@
         "plugin:react/recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:react-hooks/recommended",
-        "prettier",
-        "prettier/react"
+        "plugin:prettier/recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -23,7 +22,6 @@
     },
     "plugins": [
         "react",
-        "react-native",
         "react-hooks",
         "@typescript-eslint"
     ],
@@ -53,14 +51,12 @@
             "error",
             "always"
         ],
-        // prevent eslint to complain about the "styles" variable being used before it was defined
         "no-use-before-define": [
             "error",
             {
                 "variables": false
             }
         ],
-        // ignore errors for the react-navigation package
         "react/prop-types": [
             "error",
             {
@@ -76,15 +72,8 @@
                 "code": 150,
                 "tabWidth": 4,
                 "ignoreUrls": true
-            },
+            }
         ],
-        // https://www.npmjs.com/package/eslint-plugin-react-native#list-of-supported-rules
-        "react-native/no-unused-styles": 1,
-        "react-native/split-platform-components": 2,
-        "react-native/no-inline-styles": 1,
-        "react-native/no-color-literals": 1,
-        "react-native/no-raw-text": 2,
-        "react-native/no-single-element-style-arrays": 1
     },
     "settings": {
         "react": {
