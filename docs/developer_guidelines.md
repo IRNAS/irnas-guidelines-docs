@@ -385,12 +385,22 @@ For more information about the languages and coding styles refer to:
 - [TypeScript lang](https://www.typescriptlang.org/docs/) for TS
 
 #### Coding style
-One should use configuration files, which are available in this repo.
+Style should be automatically enforced by the linter and formatter. In VS code this is done by the following two plugins: ESLint (for linting) and Prettier (for code formatting). Install them from **extensions** menu.
+
+One should use configuration files, which are available in this repo [here](/tools/js_ts-config). List of files:
 1. TS compiler config
 2. Linter config
 3. Code formatter config
+4. Linter ignore file
+5. Code formatter ignore file
 
-Style should be automatically enforced by the linter and formatter. In VS code this is done by the following two components: ESLint (for linting) and Prettier (for code formatting).
+Files are organized in folders, depending of the project type (React, React Native or Node). All this files need to be located in the root directory of the target project.
+
+In order to automatically format your code when saving, open VS code `settings.json` file and add these two lines:
+```
+"editor.defaultFormatter": "esbenp.prettier-vscode",
+"editor.formatOnSave": true,
+```
 
 #### Docstrings
 Use style comments from **JSDoc** for functions, interfaces, enums, and classes. Documentation is available [here](https://jsdoc.app/index.html).
