@@ -4,28 +4,34 @@
 
 <!-- vim-markdown-toc GFM -->
 
-* [Commits 📌](#commits-)
-    * [Message style](#message-style)
-        * [Short](#short)
-        * [Full](#full)
-    * [Commit and message content](#commit-and-message-content)
-* [Coding standards 📚](#coding-standards-)
-    * [C/C++ 🇨](#cc-)
-        * [Source code documentation](#source-code-documentation)
-        * [Doxygen guidelines](#doxygen-guidelines)
-        * [Coding style](#coding-style)
-        * [Include statements](#include-statements)
-    * [Python 🐍](#python-)
-        * [Coding standard](#coding-standard)
-        * [Coding style](#coding-style-1)
-        * [Docstrings](#docstrings)
-    * [Rust 🦀](#rust-)
-        * [Coding style](#coding-style-2)
-        * [Doc comments](#doc-comments)
-    * [JavaScript/TypeScript 🇯🇸 / 🇹🇸](#javascripttypescript---)
-    * [Short scripts in various languages 💣](#short-scripts-in-various-languages-)
-        * [Documentation](#documentation)
-        * [Shebang lines](#shebang-lines)
+- [Developer guidelines](#developer-guidelines)
+  - [Table of Contents 📜](#table-of-contents-)
+  - [Commits 📌](#commits-)
+    - [Message style](#message-style)
+      - [Short](#short)
+      - [Full](#full)
+    - [Commit and message content](#commit-and-message-content)
+  - [Coding standards 📚](#coding-standards-)
+    - [C/C++ 🇨](#cc-)
+      - [Source code documentation](#source-code-documentation)
+      - [Doxygen guidelines](#doxygen-guidelines)
+      - [Coding style](#coding-style)
+      - [Include statements](#include-statements)
+    - [Python 🐍](#python-)
+      - [Coding standard](#coding-standard)
+      - [Coding style](#coding-style-1)
+      - [Docstrings](#docstrings)
+    - [Rust 🦀](#rust-)
+      - [Coding style](#coding-style-2)
+      - [Doc comments](#doc-comments)
+    - [JavaScript/TypeScript 🇯🇸 / 🇹🇸](#javascripttypescript---)
+      - [General guidelines](#general-guidelines)
+      - [Coding standard](#coding-standard-1)
+      - [Coding style](#coding-style-3)
+      - [Docstrings](#docstrings-1)
+    - [Short scripts in various languages 💣](#short-scripts-in-various-languages-)
+      - [Documentation](#documentation)
+      - [Shebang lines](#shebang-lines)
 
 <!-- vim-markdown-toc -->
 
@@ -363,7 +369,62 @@ comprehensive document refers to the [rustdoc book].
 
 ### JavaScript/TypeScript 🇯🇸 / 🇹🇸
 
-🚧 **In progress** 🚧
+#### General guidelines
+- Use `yarn` instead of `npm` package manager:
+  - `yarn add <package_name>` instead of `npm install <package_name>`,
+  - `yarn add --dev <package_name>` instead of `npm install --save-dev <package_name>`,
+  - `yarn create` instead of `npx`.
+- Use templates for React or RN when creating a new project.
+- Typescript usage is recommended.
+
+#### Coding standard
+Follow guidelines from [Jared Palmer](https://github.com/jaredpalmer/typescript). They were written for TS but most of the sections apply also to JS.
+
+For more information about the languages and coding styles refer to:
+- [JavaScript.info](https://javascript.info/) for JS
+- [TypeScript lang](https://www.typescriptlang.org/docs/) for TS
+
+#### Coding style
+One should use configuration files, which are available in this repo.
+1. TS compiler config
+2. Linter config
+3. Code formatter config
+
+Style should be automatically enforced by the linter and formatter. In VS code this is done by the following two components: ESLint (for linting) and Prettier (for code formatting).
+
+#### Docstrings
+Use style comments from **JSDoc** for functions, interfaces, enums, and classes. Documentation is available [here](https://jsdoc.app/index.html).
+
+See example below:
+```TypeScript
+/**
+ * Compares two software version numbers (e.g. "1.7.1" or "1.2b").
+ *
+ * This function was born in http://stackoverflow.com/a/6832721.
+ *
+ * @param {string} v1 The first version to be compared.
+ * @param {string} v2 The second version to be compared.
+ * @param {object} [options] Optional flags that affect comparison behavior:
+ *         - lexicographical: true</tt> compares each part of the version strings lexicographically instead of
+ *         naturally; this allows suffixes such as "b" or "dev" but will cause "1.10" to be considered smaller than
+ *         "1.2".
+ *         - zeroExtend: true</tt> changes the result if one version string has less parts than the other. In
+ *         this case the shorter string will be padded with "zero" parts instead of being considered smaller.
+ *
+ * @returns {number|NaN}
+ *    - 0 if the versions are equal
+ *    - a negative integer iff v1 < v2
+ *    - a positive integer iff v1 > v2
+ *    - NaN if either version string is in the wrong format
+ *
+ * @copyright by Jon Papaioannou (["john", "papaioannou"].join(".") + "@gmail.com")
+ * This is an updated version from https://github.com/Rombecchi/version-compare
+ * @license This function is in the public domain. Do what you want with it, no strings attached.
+ */
+export function VersionCompare(v1: string, v2: string, options?: { lexicographical: boolean; zeroExtend: boolean }): number {
+  ...
+}
+```
 
 ### Short scripts in various languages 💣
 
