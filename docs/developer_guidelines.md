@@ -396,6 +396,19 @@ List of files:
 4. Linter ignore file
 5. Code formatter ignore file
 
+Note that you also need to install packages for eslint and prettier in the project:
+```
+yarn add --dev eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin
+yarn add --dev prettier eslint-config-prettier 
+```
+
+And add these to scripts inside `package.json`:
+```
+  "lint": "eslint --ext .js,.ts .",
+  "format": "prettier --ignore-path .eslintignore --write \"**/*.+(js|ts|json)\"",
+  }
+```
+
 In order to automatically format your code when saving, open VS code `settings.json` file and add these two lines:
 ```
 "editor.defaultFormatter": "esbenp.prettier-vscode",
