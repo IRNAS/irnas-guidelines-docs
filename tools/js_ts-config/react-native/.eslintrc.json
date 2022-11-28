@@ -1,0 +1,74 @@
+{
+    "env": {
+        "es2021": true,
+        "node": true,
+        "react-native/react-native": true,
+        "jest": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:react-hooks/recommended",
+        "prettier",
+        "prettier/react"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "plugins": ["react", "react-native", "react-hooks", "@typescript-eslint"],
+    "rules": {
+        "indent": ["error", 4],
+        "no-tabs": [
+            "error",
+            {
+                "allowIndentationTabs": true
+            }
+        ],
+        "linebreak-style": ["error", "windows"],
+        "quotes": [
+            "error",
+            "double",
+            {
+                "avoidEscape": true
+            }
+        ],
+        "semi": ["error", "always"],
+        "no-use-before-define": [
+            "error",
+            {
+                "variables": false
+            }
+        ],
+        "react/prop-types": [
+            "error",
+            {
+                "ignore": ["navigation", "navigation.navigate"]
+            }
+        ],
+        "max-len": [
+            "error",
+            {
+                "code": 150,
+                "tabWidth": 4,
+                "ignoreUrls": true
+            }
+        ],
+        "react-native/no-unused-styles": 1,
+        "react-native/split-platform-components": 2,
+        "react-native/no-inline-styles": 1,
+        "react-native/no-color-literals": 1,
+        "react-native/no-raw-text": 2,
+        "react-native/no-single-element-style-arrays": 1
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    }
+}

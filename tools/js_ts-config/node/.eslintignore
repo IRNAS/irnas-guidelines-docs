@@ -1,0 +1,3 @@
+# don't ever lint node_modules or dist folder
+node_modules
+dist
