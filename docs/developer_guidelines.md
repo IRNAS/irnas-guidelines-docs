@@ -370,11 +370,11 @@ comprehensive document refers to the [rustdoc book].
 ### JavaScript/TypeScript 🇯🇸 / 🇹🇸
 
 #### General guidelines
-- Use `yarn` instead of `npm` package manager:
+- Using `yarn` instead of `npm` package manager is preferred:
   - `yarn add <package_name>` instead of `npm install <package_name>`,
   - `yarn add --dev <package_name>` instead of `npm install --save-dev <package_name>`,
   - `yarn create` instead of `npx`.
-- Use templates for React or RN when creating a new project.
+- It is suggested to start a new project by using templates for React or RN (React Native).
 - Typescript usage is recommended.
 
 #### Coding standard
@@ -385,7 +385,7 @@ For more information about the languages and coding styles refer to:
 - [TypeScript lang](https://www.typescriptlang.org/docs/) for TS
 
 #### Coding style
-Style should be automatically enforced by the linter and formatter. In VS code this is done by the following two plugins: ESLint (for linting) and Prettier (for code formatting). Install them from **extensions** menu.
+Style should be automatically enforced by the linter and formatter. In VS Code this is done by the following two plugins: ESLint (for linting) and Prettier (for code formatting). Install them from **extensions** menu.
 
 One should use configuration files, which are available in this repo [here](/tools/js_ts-config). Files are organized in folders, depending of the project type (React, React Native or Node). All this files need to be located in the root directory of the target project.
 
@@ -409,7 +409,7 @@ And add these to scripts inside `package.json`:
   }
 ```
 
-In order to automatically format your code when saving, open VS code `settings.json` file and add these two lines:
+In order to automatically format your code when saving, open VS Code `settings.json` file and add these two lines:
 ```
 "editor.defaultFormatter": "esbenp.prettier-vscode",
 "editor.formatOnSave": true,
