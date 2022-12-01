@@ -38,10 +38,6 @@
                 "allowIndentationTabs": true
             }
         ],
-        "linebreak-style": [
-            "error",
-            "windows"
-        ],
         "quotes": [
             "error",
             "double",
@@ -66,14 +62,6 @@
                     "navigation",
                     "navigation.navigate"
                 ]
-            }
-        ],
-        "max-len": [
-            "error",
-            {
-                "code": 150,
-                "tabWidth": 4,
-                "ignoreUrls": true
             }
         ]
     },
