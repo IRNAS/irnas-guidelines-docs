@@ -334,7 +334,7 @@ be defined.
 
 The naming scheme that should be used for release objects:
 ```
-{project}-{firmware_type}-{board_name}-{hardware_version}-{firmware_version}-{qualifier}.{file_extension}
+{project}-{firmware_type}-{board_name}-{hardware_version}-{firmware_version}-{qualifiers}.{file_extension}
 ```
 
 Fields `project` and `firmware_version` are the only mandatory ones, others
@@ -356,7 +356,7 @@ Explanation of fields:
 * `version` - Version of the software/firmware which consists of `v` and a
   version number. Versions such as `v1.2.0`, `v4.0.1` or `v0.5.1` are all valid
   options.
-* `qualifier` - Optional field, see explanation below.
+* `qualifiers` - Optional field, can be repeated. See explanation below.
 * `file_extension` - Depends on a generated object, could be `bin`, `elf`, `hex`
   or something else.
 
