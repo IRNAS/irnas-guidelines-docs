@@ -28,10 +28,8 @@ release badge above.
 
 - [Github Action workflows] - Contains a variety of GitHub Actions workflow
   files that automate various processes.
-- [Generic project template] - Used for creating a new GitHub project, 🚧
-  **currently under construction** 🚧.
-- [Zephyr project template] - Used for creating a new Zephyr project, 🚧
-  **currently private and under construction** 🚧.
+- [Generic project template] - Used for creating a new GitHub project.
+- [Zephyr project template] - Used for creating a new Zephyr project.
 
 ## License 📄
 
@@ -46,6 +44,7 @@ Attribution-NonCommercial-ShareAlike 4.0 International License][cc-by-nc-sa].
 [gitlint]: tools/gitlint/README.md
 [github action workflows]: https://github.com/IRNAS/irnas-workflows-software
 [generic project template]: https://github.com/IRNAS/irnas-projects-template
+[zephyr project template]: https://github.com/IRNAS/irnas-zephyr-template
 [release-shield]:
   https://img.shields.io/github/v/release/irnas/irnas-guidelines-docs?color=g&label=latest%20release
 [release-link]: https://github.com/IRNAS/irnas-guidelines-docs/releases/latest
