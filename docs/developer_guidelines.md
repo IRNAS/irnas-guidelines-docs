@@ -4,34 +4,32 @@
 
 <!-- vim-markdown-toc GFM -->
 
-- [Developer guidelines](#developer-guidelines)
-  - [Table of Contents 📜](#table-of-contents-)
-  - [Commits 📌](#commits-)
-    - [Message style](#message-style)
-      - [Short](#short)
-      - [Full](#full)
-    - [Commit and message content](#commit-and-message-content)
-  - [Coding standards 📚](#coding-standards-)
-    - [C/C++ 🇨](#cc-)
-      - [Source code documentation](#source-code-documentation)
-      - [Doxygen guidelines](#doxygen-guidelines)
-      - [Coding style](#coding-style)
-      - [Include statements](#include-statements)
-    - [Python 🐍](#python-)
-      - [Coding standard](#coding-standard)
-      - [Coding style](#coding-style-1)
-      - [Docstrings](#docstrings)
-    - [Rust 🦀](#rust-)
-      - [Coding style](#coding-style-2)
-      - [Doc comments](#doc-comments)
-    - [JavaScript/TypeScript 🇯🇸 / 🇹🇸](#javascripttypescript---)
-      - [General guidelines](#general-guidelines)
-      - [Coding standard](#coding-standard-1)
-      - [Coding style](#coding-style-3)
-      - [Docstrings](#docstrings-1)
-    - [Short scripts in various languages 💣](#short-scripts-in-various-languages-)
-      - [Documentation](#documentation)
-      - [Shebang lines](#shebang-lines)
+- [Commits 📌](#commits-)
+  - [Message style](#message-style)
+    - [Short](#short)
+    - [Full](#full)
+  - [Commit and message content](#commit-and-message-content)
+- [Coding standards 📚](#coding-standards-)
+  - [C/C++ 🇨](#cc-)
+    - [Source code documentation](#source-code-documentation)
+    - [Doxygen guidelines](#doxygen-guidelines)
+    - [Coding style](#coding-style)
+    - [Include statements](#include-statements)
+  - [Python 🐍](#python-)
+    - [Coding standard](#coding-standard)
+    - [Coding style](#coding-style-1)
+    - [Docstrings](#docstrings)
+  - [Rust 🦀](#rust-)
+    - [Coding style](#coding-style-2)
+    - [Doc comments](#doc-comments)
+  - [JavaScript/TypeScript 🇯🇸 / 🇹🇸](#javascripttypescript---)
+    - [General guidelines](#general-guidelines)
+    - [Coding standard](#coding-standard-1)
+    - [Coding style](#coding-style-3)
+    - [Docstrings](#docstrings-1)
+  - [Short scripts in various languages 💣](#short-scripts-in-various-languages-)
+    - [Documentation](#documentation)
+    - [Shebang lines](#shebang-lines)
 
 <!-- vim-markdown-toc -->
 
@@ -44,10 +42,11 @@ A lot has been said on this topic, so it is best to refer to external resources
 and then highlight important points.
 
 Resources:
-* [Source control commit guidelines by Embedded Artistry] - The main resource
+
+- [Source control commit guidelines by Embedded Artistry] - The main resource
   related to the commit content and message content. **Read this first, before
   reading the rest**.
-* [One Idea is One Commit] - Interesting committing strategy, comparable to
+- [One Idea is One Commit] - Interesting committing strategy, comparable to
   atomic commits.
 
 Use the `gitlint` tool to check your commit messages. See
@@ -62,12 +61,14 @@ There are two possible styles for the commit messages: short and full.
 Short commit messages should be around 50 characters long, the maximum is 72.
 
 Use this when the change that you made is either:
-* self-explanatory, for example: `Fix typo in README.md` or
-* there is a GitHub issue that provides sufficient context for the change made.
+
+- self-explanatory, for example: `Fix typo in README.md` or
+- there is a GitHub issue that provides sufficient context for the change made.
 
 Mention relevant GitHub issues at the end of the message, for example:
-* `Fix out of bounds bug, closes #123`
-* `Add shell module, relevant #456`
+
+- `Fix out of bounds bug, closes #123`
+- `Add shell module, relevant #456`
 
 #### Full
 
@@ -76,12 +77,12 @@ format.
 
 The full message format is best summarized with the below rules:
 
-* Separate subject from body with a blank line.
-* Limit the subject line to 50 characters.
-* Capitalize the subject line.
-* Do not end the subject line with a period.
-* Use the imperative mood in the subject line.
-* Wrap the body at 72 characters.
+- Separate subject from body with a blank line.
+- Limit the subject line to 50 characters.
+- Capitalize the subject line.
+- Do not end the subject line with a period.
+- Use the imperative mood in the subject line.
+- Wrap the body at 72 characters.
 
 Below is a visual representation of the full message format:
 
@@ -119,20 +120,20 @@ Embedded Artistry].
 About content of the commits:
 
 > 1. All changes in a commit should be related.
->    * Don’t combine changes that address different problems into a single
+>    - Don’t combine changes that address different problems into a single
 >      commit.
 > 2. All changes in a commit should address a single aspect of a problem or
 >    change.
->    * Don’t be afraid to break up a new feature, bug fix, or refactoring
->      effort into multiple distinct changes.
->    * This will help you keep track of what works and what doesn’t: if there’s
+>    - Don’t be afraid to break up a new feature, bug fix, or refactoring effort
+>      into multiple distinct changes.
+>    - This will help you keep track of what works and what doesn’t: if there’s
 >      a problem, you can always revert to the last known good state. If you
 >      wait too long between commits, you may lose a lot of work or spend too
 >      long finding the source of the problem.
 > 3. Prefer small commits to large commits.
->    * This helps reviewers by allowing them to focus on a small set of related
+>    - This helps reviewers by allowing them to focus on a small set of related
 >      changes.
->    * This helps future debugging efforts by increasing the probability that a
+>    - This helps future debugging efforts by increasing the probability that a
 >      git bisect operation will quickly identify the source of the problem.
 
 About content of the commits messages:
@@ -140,9 +141,9 @@ About content of the commits messages:
 > Most importantly, the commit message body should be used to explain what you
 > are doing and why you did it that way, rather than how you did it. The code
 > itself serves to explain the how. Focus on side effects, compatibility
-> changes, or other consequences that are not immediately obvious from
-> reviewing the code. Also include any important factors that helped you arrive
-> at your particular approach.
+> changes, or other consequences that are not immediately obvious from reviewing
+> the code. Also include any important factors that helped you arrive at your
+> particular approach.
 >
 > Not all commit messages require both a subject and a body. You can include
 > only a subject if it is sufficient for a given commit.
@@ -158,10 +159,11 @@ and the [Google's Python Style Guide], section _3.8 Comments and Docstrings_.
 
 Considers header files to be “data sheets”. In the header files, you want to
 summarize:
-* what the function does,
-* what are its inputs and outputs,
-* what are the required preconditions and
-* what are the possible side effects.
+
+- what the function does,
+- what are its inputs and outputs,
+- what are the required preconditions and
+- what are the possible side effects.
 
 The goal is that comments provide enough information to the programmer so that
 he can use the module without reading its implementation. Do not document
@@ -170,21 +172,23 @@ how the function should be used (try to avoid this if you can). Do not duplicate
 information in multiple places in the code.
 
 Concretely this means:
-* Describe the module at the top of the header file. Optionally, add a brief
+
+- Describe the module at the top of the header file. Optionally, add a brief
   description of functions and/or usage examples. If documenting a driver level
   module, include a link to the datasheet and mention relevant sections. See
   [template files] in this repository for examples.
-* Document all externally visible constructs in the header files. Always comment
+- Document all externally visible constructs in the header files. Always comment
   functions, function-like macros, structs and enums. You can omit comments of
   macro defines and constants if their use and meaning are obvious.
-* Don't document internally visible static functions, or function-like macros if
+- Don't document internally visible static functions, or function-like macros if
   they are very short and obvious. The same goes for the structs, enum, and
   macro defines.
-* Add single or multi-line comments before tricky or non-obvious parts in code.
+- Add single or multi-line comments before tricky or non-obvious parts in code.
   Describe what and why the code is trying to do, not how is doing it.
 
 See the below snippet for an example of good documentation from the Zephyr
 codebase:
+
 ```c
 /**
  * @brief Lock a mutex.
@@ -224,10 +228,11 @@ Follow [Zephyr's Coding Style]. Zephyr's Coding Style generally follows of a
 
 Almost all sections in the Linux kernel coding style are relevant to firmware
 programming, some might need minor changes to become relevant:
-* [Printing kernel messages] - Replace kernel messages with log messages.
-* [Allocating memory] - Contains mentions of kernel specific memory allocators,
+
+- [Printing kernel messages] - Replace kernel messages with log messages.
+- [Allocating memory] - Contains mentions of kernel specific memory allocators,
   but, the advice still applies.
-* [The inline disease] - Again, somewhat kernel specific, we rarely use `inline`
+- [The inline disease] - Again, somewhat kernel specific, we rarely use `inline`
   keyword in our code, but, the advice still applies.
 
 #### Include statements
@@ -249,6 +254,7 @@ does this for you). Different include groups should be separated by a single
 empty line.
 
 Include groups should be ordered from top to bottom following the below list:
+
 1. Corresponding header file
 2. Header files from the project's codebase
 3. Header files from SDK's codebase
@@ -301,12 +307,14 @@ Black is a PEP8 compliant opinionated formatter with a limited set of
 configurable options.
 
 We slightly deviate from Black's default code style:
-* We use an improved string processing feature, which splits long string
+
+- We use an improved string processing feature, which splits long string
   literals and merges short ones, more about this
   [here](https://black.readthedocs.io/en/stable/the_black_code_style/future_style.html).
 
 This means that you need to add a few extra arguments when using Black from the
 command-line or from your favourite editor:
+
 ```bash
 black {some file or directory that you want to format} --preview
 ```
@@ -318,6 +326,7 @@ Follow [Google's Python Style Guide], section _3.8 Comments and Docstrings_.
 Use the `python_template.py` file as a starting point.
 
 See below snippet for an example of good documentation from TensorFlow codebase:
+
 ```python
 @keras_export(v1=['keras.__internal__.legacy.layers.average_pooling2d'])
 @tf_export(v1=['layers.average_pooling2d'])
@@ -370,55 +379,77 @@ comprehensive document refers to the [rustdoc book].
 ### JavaScript/TypeScript 🇯🇸 / 🇹🇸
 
 #### General guidelines
+
 - Using `yarn` instead of `npm` package manager is preferred:
   - `yarn add <package_name>` instead of `npm install <package_name>`,
-  - `yarn add --dev <package_name>` instead of `npm install --save-dev <package_name>`,
+  - `yarn add --dev <package_name>` instead of
+    `npm install --save-dev <package_name>`,
   - `yarn create` instead of `npx`.
-- It is suggested to start a new project by using templates for React or RN (React Native).
+- It is suggested to start a new project by using templates for React or RN
+  (React Native).
 - Typescript usage is recommended.
 
 #### Coding standard
-Follow guidelines from [Jared Palmer](https://github.com/jaredpalmer/typescript). They were written for TS but most of the sections apply also to JS.
+
+Follow guidelines from
+[Jared Palmer](https://github.com/jaredpalmer/typescript). They were written for
+TS but most of the sections apply also to JS.
 
 For more information about the languages and coding styles refer to:
+
 - [JavaScript.info](https://javascript.info/) for JS
 - [TypeScript lang](https://www.typescriptlang.org/docs/) for TS
 
 #### Coding style
-Style should be automatically enforced by the linter and formatter. In VS Code this is done by the following two plugins: ESLint (for linting) and Prettier (for code formatting). Install them from **extensions** menu.
 
-One should use configuration files, which are available in this repo [here](/tools/js_ts-config). Files are organized in folders, depending of the project type (React, React Native or Node). All this files need to be located in the root directory of the target project.
+Style should be automatically enforced by the linter and formatter. In VS Code
+this is done by the following two plugins: ESLint (for linting) and Prettier
+(for code formatting). Install them from **extensions** menu.
+
+One should use configuration files, which are available in this repo
+[here](/tools/js_ts-config). Files are organized in folders, depending of the
+project type (React, React Native or Node). All this files need to be located in
+the root directory of the target project.
 
 List of files:
+
 1. TS compiler config
 2. Linter config
 3. Code formatter config
 4. Linter ignore file
 5. Code formatter ignore file
 
-Note that you also need to install packages for eslint and prettier in the project:
+Note that you also need to install packages for eslint and prettier in the
+project:
+
 ```
 yarn add --dev eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin
-yarn add --dev prettier eslint-config-prettier 
+yarn add --dev prettier eslint-config-prettier
 ```
 
 And add these to scripts inside `package.json`:
+
 ```
   "lint": "eslint --ext .js,.ts .",
   "format": "prettier --ignore-path .eslintignore --write \"**/*.+(js|ts|json)\"",
   }
 ```
 
-In order to automatically format your code when saving, open VS Code `settings.json` file and add these two lines:
+In order to automatically format your code when saving, open VS Code
+`settings.json` file and add these two lines:
+
 ```
 "editor.defaultFormatter": "esbenp.prettier-vscode",
 "editor.formatOnSave": true,
 ```
 
 #### Docstrings
-Use style comments from **JSDoc** for functions, interfaces, enums, and classes. Documentation is available [here](https://jsdoc.app/index.html).
+
+Use style comments from **JSDoc** for functions, interfaces, enums, and classes.
+Documentation is available [here](https://jsdoc.app/index.html).
 
 See example below:
+
 ```TypeScript
 /**
  * Compares two software version numbers (e.g. "1.7.1" or "1.2b").
@@ -503,45 +534,59 @@ For Python or Bash scripts that you will execute directly specify the shebang
 line in the first line of the file.
 
 For Python2:
+
 ```python
 #!/usr/bin/env python2.7
 ```
 
 For Python3:
+
 ```python
 #!/usr/bin/env python3
 ```
 
 For Bash:
+
 ```bash
 #! /usr/bin/env bash
 ```
 
-In that way, you can call the script directly, without specifying an
-interpreter first. The script needs to have to execute permissions for this to
-work, you can do that with:
+In that way, you can call the script directly, without specifying an interpreter
+first. The script needs to have to execute permissions for this to work, you can
+do that with:
+
 ```bash
 sudo chmod +x <script>
 ```
 
-[Source control commit guidelines by Embedded Artistry]: https://embeddedartistry.com/fieldatlas/source-control-commit-guidelines/
-[One Idea is One Commit]: https://secure.phabricator.com/book/phabflavor/article/recommendations_on_revision_control/
-[Rust Style Guide]: https://github.com/rust-dev-tools/fmt-rfcs/blob/master/guide/guide.md
+[source control commit guidelines by embedded artistry]:
+  https://embeddedartistry.com/fieldatlas/source-control-commit-guidelines/
+[one idea is one commit]:
+  https://secure.phabricator.com/book/phabflavor/article/recommendations_on_revision_control/
+[rust style guide]:
+  https://github.com/rust-dev-tools/fmt-rfcs/blob/master/guide/guide.md
 [rustfmt]: https://github.com/rust-lang/rustfmt
-[Black code style]: https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html
-[Black]: https://github.com/psf/black
-[Zephyr's Coding Style]: https://docs.zephyrproject.org/latest/contribute/guidelines.html#coding-style
-[Linux kernel coding style]: https://kernel.org/doc/html/latest/process/coding-style.html
-
-[Printing kernel messages]: https://kernel.org/doc/html/latest/process/coding-style.html#printing-kernel-messages
-[Allocating memory]: https://kernel.org/doc/html/latest/process/coding-style.html#allocating-memory
-[The inline disease]: https://kernel.org/doc/html/latest/process/coding-style.html#the-inline-disease
-[Rust By Example]: https://doc.rust-lang.org/rust-by-example/meta/doc.html
+[black code style]:
+  https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html
+[black]: https://github.com/psf/black
+[zephyr's coding style]:
+  https://docs.zephyrproject.org/latest/contribute/guidelines.html#coding-style
+[linux kernel coding style]:
+  https://kernel.org/doc/html/latest/process/coding-style.html
+[printing kernel messages]:
+  https://kernel.org/doc/html/latest/process/coding-style.html#printing-kernel-messages
+[allocating memory]:
+  https://kernel.org/doc/html/latest/process/coding-style.html#allocating-memory
+[the inline disease]:
+  https://kernel.org/doc/html/latest/process/coding-style.html#the-inline-disease
+[rust by example]: https://doc.rust-lang.org/rust-by-example/meta/doc.html
 [rustdoc book]: https://doc.rust-lang.org/stable/rustdoc/
-
-[Patterns in the Machine]: https://www.amazon.com/Patterns-Machine-Software-Engineering-Development/dp/1484264398
-[Google's Python Style Guide]: https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings
-[Doxygen]: https://www.doxygen.nl/
-[nRF Connect SDK's Doxygen guidelines]: https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/doc_styleguide.html#doxygen-gl
+[patterns in the machine]:
+  https://www.amazon.com/Patterns-Machine-Software-Engineering-Development/dp/1484264398
+[google's python style guide]:
+  https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings
+[doxygen]: https://www.doxygen.nl/
+[nrf connect sdk's doxygen guidelines]:
+  https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/doc_styleguide.html#doxygen-gl
 [template files]: source_code_templates
-[tools/gitlint/README.md]: ../tools/gitlint/README.md
+[tools/gitlint/readme.md]: ../tools/gitlint/README.md
