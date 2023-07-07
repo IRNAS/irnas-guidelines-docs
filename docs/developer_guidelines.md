@@ -4,6 +4,11 @@
 
 <!-- vim-markdown-toc GFM -->
 
+- [Branching model 🌲](#branching-model-)
+  - [Key concepts](#key-concepts)
+    - [Trunk aka. `main`](#trunk-aka-main)
+    - [Committing directly to the `main`](#committing-directly-to-the-main)
+    - [Feature branches](#feature-branches)
 - [Commits 📌](#commits-)
   - [Message style](#message-style)
     - [Short](#short)
@@ -32,6 +37,76 @@
     - [Shebang lines](#shebang-lines)
 
 <!-- vim-markdown-toc -->
+
+## Branching model 🌲
+
+<p align="center">
+  <img src="../images/trunk-based-development.png" alt="trunk" width=800 ><br><br>
+    <i>Trunk-based development branching model, source: <a href="https://statusneo.com/trunk-based-development/">StatusNeo</a></i><br>
+
+</p>
+
+The IRNAS's Git branching model is based on the [Trunk-based development]
+branching model with some minor differences.
+
+### Key concepts
+
+#### Trunk aka. `main`
+
+Each repository has a single long-lived, default branch named `main`.
+
+There are two rules that should be followed when adding new code to `main`:
+
+- It should **never break the build** (whatever _build_ means for a specific
+  repository). Bugs should be caught by automated tests, static analysis tools
+  or by code reviews.
+- `main` should **always be release-ready**, even if there is work in progress.
+
+Functionalities that might need some more development time to become useful
+should not be included in the build until they are ready. For example: don't
+include unfinished source files in the `CMakelists.txt` files or don't merge
+feature branches until they are ready, etc.
+
+Those two rules can sometimes be hard to follow in practice due to unforeseen
+circumstances. If a deviation from those two rules happens effort should be made
+to bring the `main` branch into the correct state (**buildable** and
+**release-ready**).
+
+New code can be added to `main` in two ways:
+
+- either by committing to it directly, or
+- in the form of feature branches.
+
+#### Committing directly to the `main`
+
+If you are working alone on the project and your work is trivial, then you can
+commit directly to the `main` branch.
+
+As soon you are:
+
+- working in a repository alongside other developers,
+- want your work reviewed or
+- making critical changes
+
+then you probably want to create a feature branch for your changes and have your
+work reviewed by a another developer.
+
+#### Feature branches
+
+A few things should be kept in mind when working with the feature branches:
+
+- They should be focused on accomplishing one small thing.
+- They should take up to 1 day of work to complete and to open Pull Request back
+  into the `main` branch for the code review.
+
+The rapid, small commits of trunk-based development make code review a more
+efficient process. With small branches, developers can quickly see and review
+small changes. This is far easier compared to a long-lived feature branch where
+a reviewer reads pages of code or manually inspects a large surface area of code
+changes.
+
+Use `feature/<branch name>` format when naming feature branches, for example
+`feature/new-cool-subsystem`.
 
 ## Commits 📌
 
@@ -590,3 +665,5 @@ sudo chmod +x <script>
   https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/doc_styleguide.html#doxygen-gl
 [template files]: source_code_templates
 [tools/gitlint/readme.md]: ../tools/gitlint/README.md
+[trunk-based development]:
+  https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development
