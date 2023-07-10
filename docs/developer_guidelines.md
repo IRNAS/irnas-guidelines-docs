@@ -55,7 +55,7 @@ branching model with some minor differences.
 
 Each repository has a single long-lived, default branch named `main`.
 
-There are two rules that should be followed when adding new code to `main`:
+Two rules should be followed when adding new code to `main`:
 
 - It should **never break the build** (whatever _build_ means for a specific
   repository). Bugs should be caught by automated tests, static analysis tools
@@ -64,8 +64,8 @@ There are two rules that should be followed when adding new code to `main`:
 
 Functionalities that might need some more development time to become useful
 should not be included in the build until they are ready. For example: don't
-include unfinished source files in the `CMakelists.txt` files or don't merge
-feature branches until they are ready, etc.
+include unfinished source files in `CMakelists.txt` files, don't merge feature
+branches until they are ready, etc.
 
 Those two rules can sometimes be hard to follow in practice due to unforeseen
 circumstances. If a deviation from those two rules happens effort should be made
@@ -89,15 +89,15 @@ As soon you are:
 - making critical changes
 
 then you probably want to create a feature branch for your changes and have your
-work reviewed by a another developer.
+work reviewed by another developer.
 
 #### Feature branches
 
 A few things should be kept in mind when working with the feature branches:
 
 - They should be focused on accomplishing one small thing.
-- They should take up to 1 day of work to complete and to open Pull Request back
-  into the `main` branch for the code review.
+- They should take up to 1 day of work to complete. Once complete, a Pull
+  Request into `main` branch should be created for the code review.
 
 The rapid, small commits of trunk-based development make code review a more
 efficient process. With small branches, developers can quickly see and review
@@ -105,7 +105,7 @@ small changes. This is far easier compared to a long-lived feature branch where
 a reviewer reads pages of code or manually inspects a large surface area of code
 changes.
 
-Use `feature/<branch name>` format when naming feature branches, for example
+Use the `feature/<branch name>` format when naming feature branches, for example
 `feature/new-cool-subsystem`.
 
 ## Commits 📌
@@ -147,12 +147,12 @@ Mention relevant GitHub issues at the end of the message, for example:
 
 #### Full
 
-Whenever the change you made needs more context you should use full message
+Whenever the change you made needs more context you should use the full message
 format.
 
 The full message format is best summarized with the below rules:
 
-- Separate subject from body with a blank line.
+- Separate the subject from the body with a blank line.
 - Limit the subject line to 50 characters.
 - Capitalize the subject line.
 - Do not end the subject line with a period.
@@ -192,7 +192,7 @@ See also: #456, #789
 The below sections are copied directly from [Source control commit guidelines by
 Embedded Artistry].
 
-About content of the commits:
+About the content of the commits:
 
 > 1. All changes in a commit should be related.
 >    - Don’t combine changes that address different problems into a single
@@ -211,7 +211,7 @@ About content of the commits:
 >    - This helps future debugging efforts by increasing the probability that a
 >      git bisect operation will quickly identify the source of the problem.
 
-About content of the commits messages:
+About the content of the commits messages:
 
 > Most importantly, the commit message body should be used to explain what you
 > are doing and why you did it that way, rather than how you did it. The code
@@ -249,7 +249,7 @@ information in multiple places in the code.
 Concretely this means:
 
 - Describe the module at the top of the header file. Optionally, add a brief
-  description of functions and/or usage examples. If documenting a driver level
+  description of functions and/or usage examples. If documenting a driver-level
   module, include a link to the datasheet and mention relevant sections. See
   [template files] in this repository for examples.
 - Document all externally visible constructs in the header files. Always comment
@@ -257,7 +257,7 @@ Concretely this means:
   macro defines and constants if their use and meaning are obvious.
 - Don't document internally visible static functions, or function-like macros if
   they are very short and obvious. The same goes for the structs, enum, and
-  macro defines.
+  macro definitions.
 - Add single or multi-line comments before tricky or non-obvious parts in code.
   Describe what and why the code is trying to do, not how is doing it.
 
@@ -305,7 +305,7 @@ Almost all sections in the Linux kernel coding style are relevant to firmware
 programming, some might need minor changes to become relevant:
 
 - [Printing kernel messages] - Replace kernel messages with log messages.
-- [Allocating memory] - Contains mentions of kernel specific memory allocators,
+- [Allocating memory] - Contains mentions of kernel-specific memory allocators,
   but, the advice still applies.
 - [The inline disease] - Again, somewhat kernel specific, we rarely use `inline`
   keyword in our code, but, the advice still applies.
@@ -324,9 +324,9 @@ should compile without errors. The header file should include not more than what
 is necessary for that.
 
 Include statements belonging to the same include group should be written
-together with no space in the between, ordered alphabetically(`clang-format`
-does this for you). Different include groups should be separated by a single
-empty line.
+together with no space in between, ordered alphabetically(`clang-format` does
+this for you). Different include groups should be separated by a single empty
+line.
 
 Include groups should be ordered from top to bottom following the below list:
 
@@ -378,12 +378,12 @@ guide. Read it and learn from it.
 #### Coding style
 
 Follow the [Black code style] that is enforced by the formatting tool [Black].
-Black is a PEP8 compliant opinionated formatter with a limited set of
+Black is a PEP8-compliant opinionated formatter with a limited set of
 configurable options.
 
 We slightly deviate from Black's default code style:
 
-- We use an improved string processing feature, which splits long string
+- We use an improved string processing feature, which splits the long string
   literals and merges short ones, more about this
   [here](https://black.readthedocs.io/en/stable/the_black_code_style/future_style.html).
 
@@ -400,7 +400,8 @@ Follow [Google's Python Style Guide], section _3.8 Comments and Docstrings_.
 
 Use the `python_template.py` file as a starting point.
 
-See below snippet for an example of good documentation from TensorFlow codebase:
+See the below snippet for an example of good documentation from the TensorFlow
+codebase:
 
 ```python
 @keras_export(v1=['keras.__internal__.legacy.layers.average_pooling2d'])
@@ -449,7 +450,7 @@ interfaces, the standard Rust distribution ships with a tool called `rustdoc`
 which generates documentation from Rust projects.
 
 For a simple example refer to the [Rust By Example] page. For a more
-comprehensive document refers to the [rustdoc book].
+comprehensive document refer to the [rustdoc book].
 
 ### JavaScript/TypeScript 🇯🇸 / 🇹🇸
 
@@ -483,8 +484,8 @@ this is done by the following two plugins: ESLint (for linting) and Prettier
 
 One should use configuration files, which are available in this repo
 [here](/tools/js_ts-config). Files are organized in folders, depending of the
-project type (React, React Native or Node). All this files need to be located in
-the root directory of the target project.
+project type (React, React Native or Node). All these files need to be located
+in the root directory of the target project.
 
 List of files:
 
@@ -494,7 +495,7 @@ List of files:
 4. Linter ignore file
 5. Code formatter ignore file
 
-Note that you also need to install packages for eslint and prettier in the
+Note that you also need to install packages for `eslint` and `prettier` in the
 project:
 
 ```
@@ -510,8 +511,8 @@ And add these to scripts inside `package.json`:
   }
 ```
 
-In order to automatically format your code when saving, open VS Code
-`settings.json` file and add these two lines:
+To automatically format your code when saving, open VS Code `settings.json` file
+and add these two lines:
 
 ```
 "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -523,7 +524,7 @@ In order to automatically format your code when saving, open VS Code
 Use style comments from **JSDoc** for functions, interfaces, enums, and classes.
 Documentation is available [here](https://jsdoc.app/index.html).
 
-See example below:
+See the example below:
 
 ```TypeScript
 /**
@@ -533,11 +534,11 @@ See example below:
  *
  * @param {string} v1 The first version to be compared.
  * @param {string} v2 The second version to be compared.
- * @param {object} [options] Optional flags that affect comparison behavior:
+ * @param {object} [options] Optional flags that affect comparison behaviour:
  *         - lexicographical: true</tt> compares each part of the version strings lexicographically instead of
  *         naturally; this allows suffixes such as "b" or "dev" but will cause "1.10" to be considered smaller than
  *         "1.2".
- *         - zeroExtend: true</tt> changes the result if one version string has less parts than the other. In
+ *         - zeroExtend: true</tt> changes the result if one version string has fewer parts than the other. In
  *         this case the shorter string will be padded with "zero" parts instead of being considered smaller.
  *
  * @returns {number|NaN}
