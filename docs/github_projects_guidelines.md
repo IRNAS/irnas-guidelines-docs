@@ -28,7 +28,6 @@ working with projects hosted on GitHub.
   - [Valid release objects names](#valid-release-objects-names)
 - [GitHub labels management 🏷️](#github-labels-management-)
   - [Usage](#usage)
-  - [Exporting labels to a project](#exporting-labels-to-a-project)
 - [Documentation 📖](#documentation-)
   - [Gitbook](#gitbook)
   - [Github](#github)
@@ -411,40 +410,6 @@ Below are some guidelines regarding the usage of labels:
 Please note that the above guidelines are exactly that, guidelines, and not
 rules. If your project requires a different set of labels, uses additional
 groups, etc. then feel free to break the guidelines.
-
-### Exporting labels to a project
-
-To export labels from `irnas-project-template` to your you will need to install
-and use GitHub's `gh` command line tool.
-
-Install `gh` on Ubuntu by running the below commands:
-
-```bash
-curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
-&& sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-&& sudo apt update \
-&& sudo apt install gh -y
-```
-
-Authenticate `gh` tool so it can communicate with GitHub:
-
-```bash
-gh auth login
-```
-
-_The easiest way is to just press enter on every choice and confirm in the web
-browser._
-
-To clone the labels from the template project to a project of your choice:
-
-```bash
-gh label clone IRNAS/irnas-projects-template --repo IRNAS/<repo_of_your_choice>
-```
-
-**Important:** Above command will only copy new labels to the destination repo.
-Existing labels in the destination repository will not be modified or deleted.
-To overwrite existing labels use `--force` flag.
 
 ## Documentation 📖
 
