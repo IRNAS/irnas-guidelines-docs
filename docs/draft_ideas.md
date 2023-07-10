@@ -68,3 +68,39 @@ _embedd link to Github, GitBook or something else_.~~
 
 **This product version was superseded by the version _version number_. **
 ```
+
+## Labels
+
+### Exporting labels to a project
+
+To export labels from the `irnas-project-template` repo to your own you will
+need to install and use GitHub's `gh` command line tool.
+
+Install `gh` on Ubuntu by running the below commands:
+
+```bash
+curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+&& sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+&& sudo apt update \
+&& sudo apt install gh -y
+```
+
+Authenticate `gh` tool so it can communicate with GitHub:
+
+```bash
+gh auth login
+```
+
+_The easiest way is to just press enter on every choice and confirm in the web
+browser._
+
+To clone the labels from the template project to a project of your choice:
+
+```bash
+gh label clone IRNAS/irnas-projects-template --repo IRNAS/<repo_of_your_choice>
+```
+
+**Important:** Above command will only copy new labels to the destination repo.
+Existing labels in the destination repository will not be modified or deleted.
+To overwrite existing labels use `--force` flag.
