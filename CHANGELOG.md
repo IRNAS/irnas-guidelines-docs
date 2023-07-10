@@ -28,7 +28,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     now in `tools` directory.
 -   Branching model to the Trunk-based development model from GitFlow.
 -   Moved Production versions section from project guidelines to the
-    `draft_ideas.md` do to not using it.
 
 ## [0.1.0] - 2022-05-12
 
