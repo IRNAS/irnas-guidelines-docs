@@ -14,7 +14,7 @@ working with projects hosted on GitHub.
   - [Mechanical projects](#mechanical-projects)
 - [Changelog 📋](#changelog-)
   - [Content of changelog notes](#content-of-changelog-notes)
-  - [Zepyhr drivers](#zepyhr-drivers)
+  - [Zephyr drivers](#zephyr-drivers)
 - [Releases 🚀](#releases-)
   - [Tagging and naming releases](#tagging-and-naming-releases)
   - [Release notes](#release-notes)
@@ -40,7 +40,7 @@ working with projects hosted on GitHub.
 
 ### General rules
 
-- Names are written in lower-case letters.
+- Names are written in lowercase letters.
 - Names consist of several fields separated by dashes, which means that the
   fields themselves can not contain dashes.
 - Some fields are mandatory, and some of them are optional, as per project
@@ -119,14 +119,14 @@ Starting version and how it is incremented depends on the type of the project.
 Given the preceding versioning scheme increment:
 
 1. a`major` number when releasing a new, initial stable version of a product
-   (`v1.0.0`) or making any conceptual change, major rewrite, major
-   documentation changes, a new generation of a product or any other change
-   which requires additional human involvement.
+   (`v1.0.0`), making any conceptual changes, major rewrite, major documentation
+   changes, a new generation of a product or any other change which requires
+   additional human involvement.
 2. a `minor` number when adding new features, enhancements, and documentation in
    a backwards-compatible manner and
 3. a `bugfix` number when you make backwards-compatible bug fixes.
 
-New projects should start with a version `v0.1.0` and continue from there.
+New projects should start with version `v0.1.0` and continue from there.
 
 ### Hardware projects
 
@@ -137,8 +137,8 @@ Given the preceding versioning scheme increment:
 2. a `minor` number for minor layout and schematic changes such as component
    value changes, layout routing, copper fills, etc.
 
-Number `bugfix` is never incremented and is always set to `0`. New projects
-should start with a version `v1.0.0` and continue from there.
+The number `bugfix` is never incremented and is always set to `0`. New projects
+should start with version `v1.0.0` and continue from there.
 
 ### Mechanical projects
 
@@ -148,8 +148,8 @@ Given the preceding versioning scheme increment:
    placement or general functionality and
 2. a `minor` number for minor changes such as fixes, etc.
 
-Number `bugfix` is never incremented and is always set to `0`. New projects
-should start with a version `v1.0.0` and continue from there.
+The number `bugfix` is never incremented and is always set to `0`. New projects
+should start with version `v1.0.0` and continue from there.
 
 ## Changelog 📋
 
@@ -159,7 +159,7 @@ users and engineers to see precisely what notable changes have been made between
 each version of the project.
 
 IRNAS's changelog format is based on the [Keep a Changelog's] format, we follow
-it almost to a point with some minor additions and modifications.
+it is almost to a point with some minor additions and modifications.
 
 This means that:
 
@@ -202,16 +202,16 @@ In general, your changelog notes should answer the following questions:
 - What does the user need to do differently as a result?
 
 Keep in mind that in most cases a project manager will notify a customer about
-the new release and will also need to create a customer understandable abstract
-from the changelog notes. Write changelog notes in such a way so that is easy to
-write an abstract that communicates to the customer what value a specific
+the new release and will also need to create a customer-understandable abstract
+from the changelog notes. Write changelog notes in such a way that is easy to
+write an abstract that communicates to the customer what value a specific the
 release brings to him.
 
-### Zepyhr drivers
+### Zephyr drivers
 
 When creating a version entry for a Zephyr driver add a section which says for
 which NCS version was the driver built. This information should be visible to
-the developer which is deciding which version of driver to use so that it will
+the developer who is deciding which version of the driver to use so that it will
 work with its NCS version of the project. Use the below template:
 
 ```markdown
@@ -237,9 +237,11 @@ Notes) and artefacts (binaries, executables, any kind of documentation, etc.)
 
 ### Tagging and naming releases
 
+<!-- TODO: Shrink this section, refer to the Versioning section above it -->
+
 Release tags and names consist of the letter `v` followed by a version number.
 
-Below tags are all valid examples:
+The below tags are all valid examples:
 
 - `v0.1.4`
 - `v0.9.3`
@@ -273,7 +275,7 @@ be defined.
 
 ### General rules
 
-- Names are written in lower-case letters.
+- Names are written in lowercase letters.
 - Names consist of several fields separated by dashes, which means that the
   fields themselves can not contain dashes.
 - Some fields are mandatory and some are optional, as per project requirements.
@@ -289,14 +291,14 @@ The naming scheme that should be used for release objects:
 
 Fields `project` and `firmware_version` are the only mandatory ones, others
 should be added to avoid any confusion when dealing with generated files. If the
-`repo_type` of your GitHub project is `firmware` then the `hardware_version`
+`repo_type` of your GitHub project is `firmware` then the `hardware_version` the
 field is mandatory.
 
 Explanation of fields:
 
 - `project` - Project name, such as `blebeacon` or `tracker`
-- `firmware_type` - The type of the firmware, needs to be added if the build
-  system produces applications and bootloader firmware. It can be `app` (for
+- `firmware_type` - The type of firmware, needs to be added if the build system
+  produces applications and bootloader firmware. It can be `app` (for
   application firmware or software) or `bl` (for bootloader firmware).
 - `board_name` - If a project supports multiple boards, this field should be
   used to distinguish between different hardware boards, such as, `VYPER_GO` and
@@ -307,7 +309,7 @@ Explanation of fields:
 - `version` - Version of the software/firmware which consists of `v` and a
   version number. Versions such as `v1.2.0`, `v4.0.1` or `v0.5.1` are all valid
   options.
-- `qualifiers` - Optional field, can be repeated. See explanation below.
+- `qualifiers` - Optional field, can be repeated. See the explanation below.
 - `file_extension` - Depends on a generated object, could be `bin`, `elf`, `hex`
   or something else.
 
@@ -331,16 +333,16 @@ Example scenario: you could be developing firmware that is used:
 - in RF compliance tests, where the device behaves completely differently for
   testing purposes.
 
-In that scenario production artefact would have no misc qualifier, development
-artefact could have `log` qualifier and RF compliance artefact would have `rf`
-qualifier.
+In that scenario, production artefact would have no misc qualifier, development
+the artefact could have `log` qualifier and RF compliance artefact would have
+`rf` qualifier.
 
 A project that uses misc qualifiers should have its meaning and usage documented
 in a visible place, such as the project's README.
 
 #### Git hash
 
-Git hash qualifiers are useful internal testing processes of the product and
+Git hash qualifiers are useful for internal testing processes of the product and
 where later identification is required. The version that precedes the qualifier
 should be a version of the release that was **already released**.
 
@@ -355,14 +357,14 @@ Simple firmware project:
 - GitHub repo name: `irnas-blebeacon-firmware`
 - Release artifacts: `blebeacon-hv1.4.0-v1.3.3.hex`
 
-Firmware project with application and bootloader firmwares:
+Firmware project with application and bootloader firmware:
 
 - GitHub repo name: `irnas-robot-firmware`
-- Release artifacts:
+- Release artefacts:
   - `robot-app-hv1.4.0-v1.0.0.hex`
   - `robot-bl-hv1.0.0-v1.0.0.hex`
 
-Firmware project with application and bootloader firmwares, and various sets of
+Firmware project with application and bootloader firmware, and various sets of
 build flags:
 
 - GitHub repo name: `irnas-largerobot-firmware`
@@ -387,7 +389,7 @@ To organize and categorize issues we use a set of labels that are defined in the
 [irnas-project-template] repository.
 
 When creating a new project labels are automatically transferred if the new the
-project used the `irnas-project-template` repository as a template.
+the project used the `irnas-project-template` repository as a template.
 
 If you want to use the labels in a project that was not created from the above
 the template then read the next section.
@@ -408,7 +410,7 @@ Below are some guidelines regarding the usage of labels:
 
 Please note that the above guidelines are exactly that, guidelines, and not
 rules. If your project requires a different set of labels, uses additional
-groups, etc. then fell free to break the guidelines.
+groups, etc. then feel free to break the guidelines.
 
 ### Exporting labels to a project
 
@@ -469,13 +471,14 @@ Things like:
 
 all belong on the Gitbook.
 
-Engineers and developers can also write to the GitBook on specific instructions.
+Engineers and developers can also write to the GitBook due to project-specific
+requests.
 
 ### Github
 
-Documentation on GitHub is meant to be mostly written by the engineers and
-developers. It is written in form of markdown files either in `README.md` or in
-the `docs` folder.
+Documentation on GitHub is meant to be mostly written by engineers and
+developers. It is written in the form of markdown files either in `README.md` or
+in the `docs` folder.
 
 Things like:
 
