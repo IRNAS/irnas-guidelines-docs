@@ -8,8 +8,10 @@ messages for style.
 To install it run below in the terminal:
 
 ```bash
-pip install gitlint
+pip install gitlint==0.20.0.dev18
 ```
+
+Specific version is needed as it includes a fix for edit functionality.
 
 #### Basic usage
 
