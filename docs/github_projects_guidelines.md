@@ -486,16 +486,16 @@ Versioning:
 - [CalVer](https://calver.org/) - Another versioning scheme used by many.
 - [zero0ver](https://0ver.org/) - Parody website on how many libraries misuse
   Semver.
-- [Giving Your Firmware Build a Version](https://embeddedartistry.com/blog/2016/12/21/giving-your-firmware-build-a-version/)
-  - Good article from Embedded Artistry about versioning in firmware-related
-    context.
+- [Giving Your Firmware Build a Version](https://embeddedartistry.com/blog/2016/12/21/giving-your-firmware-build-a-version/) -
+  Good article from Embedded Artistry about versioning in firmware-related
+  context.
 - [Proper Release Versioning Goes a Long Way](https://interrupt.memfault.com/blog/release-versioning) -
   Another good article about versioning from Memfualt.
 
 Release naming:
 
-- [Release naming conventions](https://www.drupal.org/docs/develop/git/git-for-drupal-project-maintainers/release-naming-conventions)
-  - Naming conventions used by Drupal.
+- [Release naming conventions](https://www.drupal.org/docs/develop/git/git-for-drupal-project-maintainers/release-naming-conventions) -
+  Naming conventions used by Drupal.
 
 Changelog:
 
