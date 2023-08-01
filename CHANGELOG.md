@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [0.2.0] - 2023-08-01
+
 ### Added
 
 -   Sections about code standards, code styles, documentation guidelines for
@@ -48,6 +50,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 -   Section about documentation.
 -   Extra readme for `.clang-format`
 
-[Unreleased]: https://github.com/IRNAS/irnas-guidelines-docs/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/IRNAS/irnas-guidelines-docs/compare/v0.2.0...HEAD
+
+[0.2.0]: https://github.com/IRNAS/irnas-guidelines-docs/compare/v0.1.0...v0.2.0
 
 [0.1.0]: https://github.com/IRNAS/irnas-guidelines-docs/compare/72adf4ac813c1915181b3cf15993ee44d90fa3ea...v0.1.0
