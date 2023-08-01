@@ -1,6 +1,7 @@
 # How to setup clang-format for VS Code for Zephyr/nRF5 development
 
 1. Run below command to install clang related tooling:
+
 ```bash
 wget https://apt.llvm.org/llvm.sh
 chmod +x llvm.sh
@@ -9,16 +10,17 @@ rm llvm.sh
 ```
 
 2. Run below command to install VS Code extension:
+
 ```bash
 code --install-extension xaver.clang-format
 ```
-
 
 3. Add below lines to your `~/.config/Code/User/settings.json`
 
 ```json
     "clang-format.executable": "/usr/bin/clang-format-14",
     "[c]": {
+        "editor.defaultFormatter": "xaver.clang-format",
         "editor.detectIndentation": false,
         "editor.tabSize": 8,
         "editor.insertSpaces": false,
@@ -60,4 +62,3 @@ More about this feature can be found
 
 [This](https://dev.to/brad_beggs/vs-code-vertical-rulers-for-prettier-code-3gp3)
 article shows how to setup rulers in VS Code and style them.
-
