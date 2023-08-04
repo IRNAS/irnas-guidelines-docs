@@ -13,9 +13,8 @@ env:
 
 jobs:
   update-changelog:
-    runs-on:
-      ubuntu-22.04
-      #runs-on: self-hosted
+    runs-on: ubuntu-22.04
+    # runs-on: self-hosted
 
     steps:
       - name: Checkout Repository
@@ -41,7 +40,7 @@ jobs:
           echo "version_cut=$version_cut" >> $GITHUB_ENV
 
       - name: Update Changelog
-        uses: IRNAS/keep-a-changelog-new-release@v1.3.1
+        uses: irnas/keep-a-changelog-new-release@v1.3.1
         with:
           tag: ${{ inputs.version }}
 
