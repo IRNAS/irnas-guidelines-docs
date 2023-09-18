@@ -332,30 +332,37 @@ Include groups should be ordered from top to bottom following the below list:
 
 1. Corresponding header file
 2. Header files from the project's codebase
-3. Header files from SDK's codebase
-4. System header files such as `stdio.`, `stddef.`, `string.h` and others
-5. C/C++ implementation files (rarely needed, but it can happen)
+3. Header files from Zephyr 
+4. Header files from NRF
+5. Other 3rd party headers
+6. System header files such as `stdio.h`, `stddef.h`, `string.h` and other stdlib files
+7. C/C++ implementation files (rarely needed, but it can happen)
 
-Of course header files themselves do not include themself.
+Of course, header files do not include themselves.
 
 Below is an example for `ui.c` file:
 
 ```c
 /* Corresponding header file */
-#include "ui.h"
+#include "ble_ctrl.h"
 
-/* Header files from project's codebase */
-#include <event/event_def.h>
-#include <event/event_mgmt.h>
-#include <misc/utility.h>
+/* From this codebase */
+#include <ble_adv.h>
+#include <ble_conn.h>
+#include <ble_helpers.h>
+#include <ble_status.h>
 
-/* Header files from SDK's codebase */
-#include <nrf_delay.h>
-#include <nrf_gpio.h>
+/* From Zephyr */
+#include <zephyr/bluetooth/addr.h>
+#include <zephyr/bluetooth/bluetooth.h>
+#include <zephyr/logging/log.h>
 
-/* System header files */
-#include <stdint.h>
+/* From NRF */
+#include <app_event_manager.h>
+
+/* From STDLIB */
 #include <string.h>
+
 ```
 
 With proposed ordering where includes are grouped from local to global is easy
