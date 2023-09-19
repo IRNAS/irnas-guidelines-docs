@@ -285,7 +285,7 @@ be defined.
 The naming scheme that should be used for release objects:
 
 ```
-{project}-{firmware_type}-{board_name}-{hardware_version}-{firmware_version}-{qualifiers}.{file_extension}
+{project}-{firmware_type}-{board_name}-{hardware_version}-{version}-{qualifiers}.{file_extension}
 ```
 
 Fields `project` and `firmware_version` are the only mandatory ones, others
