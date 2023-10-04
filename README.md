@@ -11,10 +11,6 @@ for discovering other useful IRNAS repositories.
 [![Latest Release][release-shield]][release-link]
 [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
 
-**Warning** ⚠️ - You are probably viewing this repository on a `dev` branch,
-which might contain unreleased changes. For the latest stable version click
-release badge above.
-
 ## Contents ✨
 
 - [GitHub projects guidelines] - Describes general guidelines that are used
