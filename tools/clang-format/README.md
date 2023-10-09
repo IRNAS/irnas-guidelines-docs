@@ -5,7 +5,7 @@
 ```bash
 wget https://apt.llvm.org/llvm.sh
 chmod +x llvm.sh
-sudo ./llvm.sh 14 all
+sudo ./llvm.sh 16 all
 rm llvm.sh
 ```
 
@@ -18,13 +18,13 @@ code --install-extension xaver.clang-format
 3. Add below lines to your `~/.config/Code/User/settings.json`
 
 ```json
-    "clang-format.executable": "/usr/bin/clang-format-14",
+    "clang-format.executable": "/usr/bin/clang-format-16",
     "[c]": {
         "editor.defaultFormatter": "xaver.clang-format",
         "editor.detectIndentation": false,
         "editor.tabSize": 8,
         "editor.insertSpaces": false,
-        "editor.rulers": [80]
+        "editor.rulers": [100]
     },
     "files.associations": {
         "*.h": "c"
