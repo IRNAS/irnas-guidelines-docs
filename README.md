@@ -19,6 +19,8 @@ for discovering other useful IRNAS repositories.
   should be followed when working on software/firmware projects.
 - [Clang Format] - Document dedicated to setting up the `clang-format` tool.
 - [Gitlint] - Document dedicated to setting up the `gitlint` tool.
+- [Github Altium integration] - Document describing the `batch` file, which
+  integrates Altium with Github.
 
 ## Other repositores 🌍
 
@@ -38,6 +40,7 @@ Attribution-NonCommercial-ShareAlike 4.0 International License][cc-by-nc-sa].
 [developer guidelines]: docs/developer_guidelines.md
 [clang format]: tools/clang-format/README.md
 [gitlint]: tools/gitlint/README.md
+[github altium integration]: tools/github-altium-integration/README.md
 [github action workflows]: https://github.com/IRNAS/irnas-workflows-software
 [generic project template]: https://github.com/IRNAS/irnas-projects-template
 [zephyr project template]: https://github.com/IRNAS/irnas-zephyr-template
