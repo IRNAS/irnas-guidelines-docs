@@ -298,7 +298,7 @@ example of a file header refer to the `c_cpp_template.h` file.
 
 #### Coding style
 
-Follow [Zephyr's Coding Style]. Zephyr's Coding Style generally follows of a
+Follow [Zephyr's Coding Style]. Zephyr's Coding Style generally follows a
 [Linux kernel coding style] with few exceptions.
 
 Almost all sections in the Linux kernel coding style are relevant to firmware
