@@ -10,10 +10,12 @@
     - [Committing directly to the `main`](#committing-directly-to-the-main)
     - [Feature branches](#feature-branches)
 - [Commits 📌](#commits-)
-  - [Message style](#message-style)
-    - [Short](#short)
-    - [Full](#full)
+  - [Message style and convention](#message-style-and-convention)
+    - [Structure and rules](#structure-and-rules)
+    - [Types](#types)
+    - [Scope](#scope)
   - [Commit and message content](#commit-and-message-content)
+  - [Example commit messages](#example-commit-messages)
 - [Coding standards 📚](#coding-standards-)
   - [C/C++ 🇨](#cc-)
     - [Source code documentation](#source-code-documentation)
@@ -124,68 +126,81 @@ Resources:
 - [One Idea is One Commit] - Interesting committing strategy, comparable to
   atomic commits.
 
-Use the `gitlint` tool to check your commit messages. See
-[tools/gitlint/README.md] for more information.
+### Message style and convention
 
-### Message style
+We follow [Conventional Commits] with a minor deviation:
 
-There are two possible styles for the commit messages: short and full.
+- since we do not usually create libraries, everything related to the
+  `BREAKING-CHANGE` and `!` rule is ignored. Specifically ignore rules 11., 12.,
+  13., 15., and 16. of the Conventional Commits [specification].
 
-#### Short
+[Conventional Commits]: https://www.conventionalcommits.org/
+[specification]: https://www.conventionalcommits.org/en/v1.0.0/#specification
 
-Short commit messages should be around 50 characters long, the maximum is 72.
+We use [`commited`] tool (run by the `pre-commit`) to validate commit messages.
+For relevant configuration see [`commited.toml`] file in our template
+repository.
 
-Use this when the change that you made is either:
+[`commited`]: https://github.com/crate-ci/committed
+[`commited.toml`]:
+  https://github.com/IRNAS/irnas-zephyr-template/blob/main/commited.toml
 
-- self-explanatory, for example: `Fix typo in README.md` or
-- there is a GitHub issue that provides sufficient context for the change made.
+#### Structure and rules
 
-Mention relevant GitHub issues at the end of the message, for example:
+The commit message should be structured as follows:
 
-- `Fix out of bounds bug, closes #123`
-- `Add shell module, relevant #456`
+```code
+<type>[optional scope]: <subject>
 
-#### Full
+[optional body]
 
-Whenever the change you made needs more context you should use the full message
-format.
+[optional footer(s)]
+```
 
-The full message format is best summarized with the below rules:
+General rules that must be followed:
 
-- Separate the subject from the body with a blank line.
-- Limit the subject line to 50 characters.
-- Capitalize the subject line.
+- Every commit message must have a type and a subject. Scope, body and footer
+  sections are optional.
+- Separate the subject from the body with a blank line. The subject line should
+  be around 50 characters, the maximum is 72.
 - Do not end the subject line with a period.
 - Use the imperative mood in the subject line.
 - Wrap the body at 72 characters.
+- Add a body when the change needs more context.
+- Use the footer to provide links to the relevant GitHub issues.
 
-Below is a visual representation of the full message format:
+#### Types
 
-```
-Summarize changes in around 50 characters or less
+The type field tells us what kind of change a particular commit is doing.
 
-More detailed explanatory text, can be only a sentence or two.
-Wrap it to about 72 characters or so, editors like Visual Studio
-Code and Vim do this automatically. Treat the first line as the
-subject of the commit and the rest of the text as the body. The
-blank line separating the summary from the body is critical
-(unless you omit the body completely); various tools like `log`,
-`shortlog` and `rebase` can get confused if you run the two
-together.
+Must be one of the following:
 
-Explanatory text can be split into several paragraphs.
+- `feat`: A new feature was added.
+- `fix`: Bug was fixed.
+- `docs`: Only documentation was added, improved or removed (applies also to
+  source code documentation).
+- `refactor`: A code change that neither fixes a bug nor adds a feature.
+- `style`: Change was made that doesn't affect the meaning of the code (white
+  space, formatting, missing semi-colons, etc.)
+- `test`: Only tests were added, improved or removed.
+- `infra`: Anything related to the CI or automation changed. For example: any
+  change to the GitHub Action files, `.pre-commit.config.yaml` or any other of
+  the configuration files.
+- `misc`: Catch-all type. Use it when none of the other types fit.
 
-You can also include bullet points:
-* A
-* B
-* C
+#### Scope
 
-Optionally, reference relevant GitHub issues at the bottom,
-like this:
+The scope field is optional. Use it to provide information on what part of the
+codebase/functionality changed. Possible examples are: `driver`, `lwm2m_ctrl`,
+`ui`, `lora`, etc.
 
-Resolves: #123
-See also: #456, #789
-```
+General rules:
+
+- There is no list of valid scope fields. **Use what makes sense.**
+- **Use consistent scopes inside the project**. Look through the `git log` when
+  making changes on a project that a different developer worked on earlier.
+  Avoid using different words for the same scope. For example, don't mix
+  `driver` and `drivers`, pick one and stick to it.
 
 ### Commit and message content
 
@@ -195,13 +210,13 @@ Embedded Artistry].
 About the content of the commits:
 
 > 1. All changes in a commit should be related.
->    - Don’t combine changes that address different problems into a single
+>    - Don't combine changes that address different problems into a single
 >      commit.
 > 2. All changes in a commit should address a single aspect of a problem or
 >    change.
->    - Don’t be afraid to break up a new feature, bug fix, or refactoring effort
+>    - Don't be afraid to break up a new feature, bug fix, or refactoring effort
 >      into multiple distinct changes.
->    - This will help you keep track of what works and what doesn’t: if there’s
+>    - This will help you keep track of what works and what doesn't: if there's
 >      a problem, you can always revert to the last known good state. If you
 >      wait too long between commits, you may lose a lot of work or spend too
 >      long finding the source of the problem.
@@ -217,11 +232,53 @@ About the content of the commits messages:
 > are doing and why you did it that way, rather than how you did it. The code
 > itself serves to explain the how. Focus on side effects, compatibility
 > changes, or other consequences that are not immediately obvious from reviewing
-> the code. Also include any important factors that helped you arrive at your
+> the code. Also, include any important factors that helped you arrive at your
 > particular approach.
 >
 > Not all commit messages require both a subject and a body. You can include
 > only a subject if it is sufficient for a given commit.
+
+### Example commit messages
+
+1. New feature.
+
+   ```code
+   feat(battery): add support for battery SOC received from nrf52
+
+   display_comm_ctrl now supports battery SOC received from nrf52.
+   The SOC is emitted as an event and handled in lwm2m_status_ctrl.
+
+   Related: #24
+   ```
+
+2. Spelling change.
+
+   ```code
+   docs: correct spelling in CHANGELOG.md
+   ```
+
+3. Trivial stylistic change.
+
+   ```code
+   style: format user_guide.md
+   ```
+
+4. Bug fix with body and footer.
+
+   ```code
+   fix(drivers): add a mutex to the uart_mux module
+
+   Without this fix firmware just asserts, if someone wants to access the uart_mux
+   module, while it is already taken by someone else.
+
+   This was a "day-0" issue, although it never happened in practice due to how
+   uart_mux was used.
+
+   Correct approach is to use the k_mutex to protect the resource. Now the second
+   user that tries to lock uart_mux will simply wait, which is fine.
+
+   Closes: #99
+   ```
 
 ## Coding standards 📚
 
@@ -298,8 +355,8 @@ example of a file header refer to the `c_cpp_template.h` file.
 
 #### Coding style
 
-Follow [Zephyr's Coding Style]. Zephyr's Coding Style generally follows a
-[Linux kernel coding style] with few exceptions.
+Follow [Zephyr's Coding Style]. Zephyr's Coding Style generally follows a [Linux
+kernel coding style] with few exceptions.
 
 Almost all sections in the Linux kernel coding style are relevant to firmware
 programming, some might need minor changes to become relevant:
@@ -332,10 +389,11 @@ Include groups should be ordered from top to bottom following the below list:
 
 1. Corresponding header file
 2. Header files from the project's codebase
-3. Header files from Zephyr 
+3. Header files from Zephyr
 4. Header files from NRF
 5. Other 3rd party headers
-6. System header files such as `stdio.h`, `stddef.h`, `string.h` and other stdlib files
+6. System header files such as `stdio.h`, `stddef.h`, `string.h` and other
+   stdlib files
 7. C/C++ implementation files (rarely needed, but it can happen)
 
 Of course, header files do not include themselves.
