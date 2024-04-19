@@ -40,7 +40,7 @@ jobs:
           echo "version_cut=$version_cut" >> $GITHUB_ENV
 
       - name: Update Changelog
-        uses: irnas/keep-a-changelog-new-release@v1.3.1
+        uses: thomaseizinger/keep-a-changelog-new-release@3.0.0
         with:
           tag: ${{ inputs.version }}
 
