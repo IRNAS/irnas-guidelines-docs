@@ -7,3 +7,7 @@ MD013:
 MD024: false
 # Allow inline HTML, useful for positioning images.
 MD033: false
+# link-fragments Link fragments should be valid. Due to the problems with
+# vim-markdown-toc plugin and markdown issues with emojis in titles this
+# setting needs to be disabled.
+MD051: false
