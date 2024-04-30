@@ -16,8 +16,9 @@ repositories.
 - [GitHub projects guidelines] - Describes general guidelines that are used across GitHub projects.
 - [Developer guidelines] - Describes guidelines specific to developers that should be followed when
   working on software/firmware projects.
-- [Clang Format] - Document dedicated to setting up the `clang-format` tool.
-- [Gitlint] - Document dedicated to setting up the `gitlint` tool.
+- [Pre-commit] - Document dedicated to setting up the `pre-commit` tool.
+- [JS/TS config] - Document dedicated to setting up the host machine for JavaScript and TypeScript
+  development.
 
 ## Other repositories 🌍
 
@@ -38,8 +39,8 @@ International License][cc-by-nc-sa].
 
 [github projects guidelines]: docs/github_projects_guidelines.md
 [developer guidelines]: docs/developer_guidelines.md
-[clang format]: tools/clang-format/README.md
-[gitlint]: tools/gitlint/README.md
+[Pre-commit]: tools/pre-commit/README.md
+[JS/TS config]: tools/js_ts-config/README.md
 [github action workflows]: https://github.com/IRNAS/irnas-workflows-software
 [generic project template]: https://github.com/IRNAS/irnas-projects-template
 [zephyr project template]: https://github.com/IRNAS/irnas-zephyr-template
