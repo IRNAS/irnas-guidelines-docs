@@ -93,6 +93,37 @@ If you have some folders in your repository, which you don't want `pre-commit` t
 exclude: some/specific/dir/to/ignore
 ```
 
+#### Hook specific exclude
+
+You can also exclude files from specific hooks by adding `exclude` key to the hook configuration in
+`.pre-commit-config.yaml`. The `exclude` key must be a valid regular expression.
+
+Single entry example:
+
+```yaml
+- repo: https://github.com/scop/pre-commit-shfmt
+  rev: v3.8.0-1
+  hooks:
+    - id: shfmt
+      stages: [pre-commit]
+      exclude: scripts/.*
+```
+
+Multiple entry example:
+
+```yaml
+- repo: https://github.com/scop/pre-commit-shfmt
+  rev: v3.8.0-1
+  hooks:
+    - id: shfmt
+      stages: [pre-commit]
+      exclude: |
+        (?x)^(
+            scripts/codechecker-diff.sh|
+            scripts/rpi-jlink-server/request_resource.sh
+        )$
+```
+
 #### Hook specific configuration files
 
 Some hooks have their own configuration files that configure them. Whenever that is a case, a
