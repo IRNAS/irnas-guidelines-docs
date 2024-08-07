@@ -29,6 +29,7 @@ repositories.
 - [CodeChecker server] - Used for setting up and running CodeChecker server.
 - [East] - A command line meta-tool, useful for creating, managing, and deploying Zephyr or nRF
   Connect SDK projects.
+- [Docker images] - Images suitable for the Zephyr/NCS development.
 
 ## License 📄
 
@@ -46,6 +47,7 @@ International License][cc-by-nc-sa].
 [zephyr project template]: https://github.com/IRNAS/irnas-zephyr-template
 [codechecker server]: https://github.com/IRNAS/irnas-codechecker-software
 [east]: https://github.com/IRNAS/irnas-east-software
+[docker images]: https://github.com/IRNAS/irnas-docker-software
 [release-shield]:
   https://img.shields.io/github/v/release/irnas/irnas-guidelines-docs?color=g&label=latest%20release
 [release-link]: https://github.com/IRNAS/irnas-guidelines-docs/releases/latest
