@@ -683,7 +683,7 @@ sudo chmod +x <script>
   https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings
 [doxygen]: https://www.doxygen.nl/
 [nrf connect sdk's doxygen guidelines]:
-  https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/doc_styleguide.html#doxygen-gl
+  https://docs.nordicsemi.com/bundle/ncs-latest/page/nrf/dev_model_and_contributions/documentation/styleguide.html
 [template files]: source_code_templates
 [trunk-based development]:
   https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development
