@@ -421,7 +421,7 @@ We slightly deviate from Black's default code style:
   [here](https://black.readthedocs.io/en/stable/the_black_code_style/future_style.html).
 
 This means that you need to add a few extra arguments when using Black from the command-line or from
-your favourite editor:
+your favorite editor:
 
 ```bash
 black {some file or directory that you want to format} --preview
@@ -561,7 +561,7 @@ See the example below:
  *
  * @param {string} v1 The first version to be compared.
  * @param {string} v2 The second version to be compared.
- * @param {object} [options] Optional flags that affect comparison behaviour:
+ * @param {object} [options] Optional flags that affect comparison behavior:
  *         - lexicographical: true</tt> compares each part of the version strings lexicographically instead of
  *         naturally; this allows suffixes such as "b" or "dev" but will cause "1.10" to be considered smaller than
  *         "1.2".

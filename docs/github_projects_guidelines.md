@@ -21,7 +21,7 @@ projects hosted on GitHub.
   - [Tagging and naming releases](#tagging-and-naming-releases)
   - [Release notes](#release-notes)
   - [Creating releases](#creating-releases)
-- [Release artefacts naming scheme 📦](#release-artefacts-naming-scheme-)
+- [Release artifacts naming scheme 📦](#release-artifacts-naming-scheme-)
   - [General rules](#general-rules-1)
   - [Naming scheme](#naming-scheme-1)
   - [Qualifiers](#qualifiers)
@@ -221,7 +221,7 @@ Releases are based on Git tags, which mark a specific point in your repository's
 may be different from a release date since they can be created at different times.
 
 GitHub release consists of a git tag, some text (commonly referred to as Release Notes) and
-artefacts (binaries, executables, any kind of documentation, etc.)
+artifacts (binaries, executables, any kind of documentation, etc.)
 
 ### Tagging and naming releases
 
@@ -253,7 +253,7 @@ directly from a commit that was tagged with the release tag.
 This process is automated with GitHub Actions with the "Basic" group of workflow files. More about
 this [here](https://github.com/IRNAS/irnas-workflows-software).
 
-## Release artefacts naming scheme 📦
+## Release artifacts naming scheme 📦
 
 **Important**: this section is relevant only for software and firmware projects as the release
 process for mechanical and hardware projects still yet needs to be defined.
@@ -303,7 +303,7 @@ Qualifiers come in several forms:
 #### Misc qualifiers
 
 These are special qualifiers that indicate that some special set of build flags was used to build a
-release artefact. Release artefacts that are meant to be used in the production do not contain any
+release artifact. Release artifacts that are meant to be used in the production do not contain any
 misc qualifiers.
 
 Example scenario: you could be developing firmware that is used:
@@ -312,8 +312,8 @@ Example scenario: you could be developing firmware that is used:
 - in development, with debug logs turned on and
 - in RF compliance tests, where the device behaves completely differently for testing purposes.
 
-In that scenario, production artefact would have no misc qualifier, development the artefact could
-have `log` qualifier and RF compliance artefact would have `rf` qualifier.
+In that scenario, production artifact would have no misc qualifier, development the artifact could
+have `log` qualifier and RF compliance artifact would have `rf` qualifier.
 
 A project that uses misc qualifiers should have its meaning and usage documented in a visible place,
 such as the project's README.
@@ -324,7 +324,7 @@ Git hash qualifiers are useful for internal testing processes of the product and
 identification is required. The version that precedes the qualifier should be a version of the
 release that was **already released**.
 
-**Important:** release artefacts should never contain git hash qualifiers.
+**Important:** release artifacts should never contain git hash qualifiers.
 
 ### Valid release objects names
 
@@ -338,7 +338,7 @@ Simple firmware project:
 Firmware project with application and bootloader firmware:
 
 - GitHub repo name: `irnas-robot-firmware`
-- Release artefacts:
+- Release artifacts:
   - `robot-app-hv1.4.0-v1.0.0.hex`
   - `robot-bl-hv1.0.0-v1.0.0.hex`
 
@@ -433,7 +433,7 @@ Things like:
 all belong on GitHub.
 
 When looking at the documentation from a point of a specific release, the documentation should be up
-to date and should reflect the behaviour and implementation of the project at that point.
+to date and should reflect the behavior and implementation of the project at that point.
 
 ## Resources 🤓
 
@@ -444,7 +444,7 @@ Branching models/strategies/Git related:
 
 - [Trunk Based Development](https://trunkbaseddevelopment.com/) - Exhaustive website on a newer,
   better way to do Git Branching.
-- [Git Organised: A Better Git Flow](https://dev.to/render/git-organized-a-better-git-flow-56go) -
+- [Git Organized: A Better Git Flow](https://dev.to/render/git-organized-a-better-git-flow-56go) -
   Interesting article on how to separate documenting git commits from coding.
 - [Git your reset on](https://changelog.com/podcast/480) - Podcast with the author of the above
   article.
