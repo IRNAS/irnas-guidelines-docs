@@ -27,6 +27,34 @@ To install `pre-commit` run:
 pip install pre-commit
 ```
 
+### Fixing local `pre-commit` installation
+
+Skip this section if you don't have any issues with the `pre-commit` installation.
+
+Command `pre-commit install` can sometimes fail with the following error:
+
+```shell
+pre-commit install --install-hooks
+pre-commit installed at .git/hooks/pre-commit
+Running in migration mode with existing hooks at .git/hooks/commit-msg.legacy
+Use -f to use only pre-commit.
+pre-commit installed at .git/hooks/commit-msg
+An error has occurred: InvalidManifestError:
+==> File /home/user/.cache/pre-commit/repo61yo3iqm/.pre-commit-hooks.yaml
+==> At Hook(id='clang-format')
+==> At key: types_or
+==> At index 10
+=====> Type tag 'metal' is not recognized.  Try upgrading identify and pre-commit?
+Check the log at /home/user/.cache/pre-commit/pre-commit.log
+```
+
+The solution is to upgrade the `identify` and `pre-commit` packages:
+
+```bash
+pip install pre-commit --upgrade
+pip install identify --upgrade
+```
+
 ### System setup
 
 You can setup your `git` to automatically setup hooks on newly cloned repository, that uses
