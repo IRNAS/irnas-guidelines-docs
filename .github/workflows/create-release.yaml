@@ -13,12 +13,11 @@ env:
 
 jobs:
   update-changelog:
-    runs-on: ubuntu-22.04
-    # runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0 # Fetch history for all branches and tags

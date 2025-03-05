@@ -5,3 +5,7 @@ check-file = true
 
 [default.extend-words]
 rsource = "rsource"
+dout = "dout"
+dout-gpios = "dout-gpios"
+ser = "ser"
+EXTRAVERSION = "EXTRAVERSION"
