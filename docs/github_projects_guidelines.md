@@ -14,6 +14,7 @@ projects hosted on GitHub.
   - [Software/Firmware projects](#softwarefirmware-projects)
   - [Hardware projects](#hardware-projects)
   - [Mechanical projects](#mechanical-projects)
+  - [Concepts](#concepts)
 - [Changelog 📋](#changelog-)
   - [Content of changelog notes](#content-of-changelog-notes)
   - [Zephyr drivers](#zephyr-drivers)
@@ -31,7 +32,7 @@ projects hosted on GitHub.
 - [GitHub labels management 🏷️](#github-labels-management-)
   - [Usage](#usage)
 - [Documentation 📖](#documentation-)
-  - [Gitbook](#gitbook)
+  - [OneDrive](#onedrive)
   - [Github](#github)
 - [Resources 🤓](#resources-)
 
@@ -66,7 +67,7 @@ Explanation of fields:
   - `firmware` - `C/C++` project for microcontrollers, projects for RPi,
   - `driver` - `C/C++` project for a sensor, communication module driver,
   - `hardware` - PCB hardware project,
-  - `mechanical` - mechanical CAD project,
+  - `mechanics` - mechanical CAD project,
   - `software` - software project, for example, Python tooling or a web app,
   - `application` - Android/iOS application project,
   - `docs` - Documentation project.
@@ -114,12 +115,12 @@ Starting version and how it is incremented depends on the type of the project.
 
 Given the preceding versioning scheme increment:
 
-1. a`major` number when releasing a new, initial stable version of a product (`v1.0.0`), making any
+1. A `major` number when releasing a new, initial stable version of a product (`v1.0.0`), making any
    conceptual changes, major rewrite, major documentation changes, a new generation of a product or
    any other change which requires additional human involvement.
-2. a `minor` number when adding new features, enhancements, and documentation in a
+2. A `minor` number when adding new features, enhancements, and documentation in a
    backwards-compatible manner and
-3. a `bugfix` number when you make backwards-compatible bug fixes.
+3. A `bugfix` number when you make backwards-compatible bug fixes.
 
 New projects should start with version `v0.1.0` and continue from there.
 
@@ -127,24 +128,34 @@ New projects should start with version `v0.1.0` and continue from there.
 
 Given the preceding versioning scheme increment:
 
-1. a `major` number for major layout and schematic changes such as changes to board dimensions,
-   components placement or general functionality and
-2. a `minor` number for minor layout and schematic changes such as component value changes, layout
-   routing, copper fills, etc.
+1. A `major` number for major schematic and layout changes such as changes to general functionality,
+   board shape or board dimensions.
+2. A `minor` number for minor schematic and layout changes such as smaller changes to functionality,
+   board shape and dimensions, components placement, layout routing.
+3. A `bugfix` number for changes to component values, silkscreen and documentation, such that do not
+   require new boards manufacturing.
 
-The number `bugfix` is never incremented and is always set to `0`. New projects should start with
-version `v1.0.0` and continue from there.
+New projects should start with version `v0.1.0` for **concepts** (see explanation below) and
+`v1.0.0` for functional devices and continue from there.
 
 ### Mechanical projects
 
 Given the preceding versioning scheme increment:
 
-1. a `major` number for major changes such as changes to dimensions, components placement or general
-   functionality and
-2. a `minor` number for minor changes such as fixes, etc.
+1. A `major` number for major changes such as changes to general functionality, shape and size.
+2. A `minor` number for minor changes such as smaller changes to functionality and dimensions.
+3. A `bugfix` number for changes to documentation, such that do not require new part manufacturing.
 
-The number `bugfix` is never incremented and is always set to `0`. New projects should start with
-version `v1.0.0` and continue from there.
+New projects should start with version `v0.1.0` for **concepts** (see explanation below) and
+`v1.0.0` for functional devices and continue from there.
+
+### Concepts
+
+Concept is a project that might not yet be completely functional, but it is a proof of concept that
+demonstrates the feasibility of a specific idea or technology.
+
+It is intended only for the internal use and presentation purposes, it should never be released to
+the production.
 
 ## Changelog 📋
 
@@ -392,14 +403,14 @@ guidelines.
 
 There are two general places where project-related documentation can exist:
 
-- GitBook
+- OneDrive
 - Github
 
 This section does not try to address documentation in the source code. That is a separate topic.
 
-### Gitbook
+### OneDrive
 
-Documentation on the Gitbook is meant to be mostly written by the management.
+Documentation on the OneDrive is meant to be mostly written by the management.
 
 Things like:
 
@@ -410,9 +421,9 @@ Things like:
 - concepts and
 - field research notes
 
-all belong on the Gitbook.
+all belong on the OneDrive.
 
-Engineers and developers can also write to the GitBook due to project-specific requests.
+Engineers and developers can also write to the OneDrive due to project-specific requests.
 
 ### Github
 
