@@ -22,13 +22,19 @@ projects hosted on GitHub.
   - [Tagging and naming releases](#tagging-and-naming-releases)
   - [Release notes](#release-notes)
   - [Creating releases](#creating-releases)
-- [Release artifacts naming scheme 📦](#release-artifacts-naming-scheme-)
+- [Release artifacts naming scheme for software/firmware projects 📦](#release-artifacts-naming-scheme-for-softwarefirmware-projects-)
   - [General rules](#general-rules-1)
   - [Naming scheme](#naming-scheme-1)
   - [Qualifiers](#qualifiers)
     - [Misc qualifiers](#misc-qualifiers)
     - [Git hash](#git-hash)
   - [Valid release objects names](#valid-release-objects-names)
+- [GitHub for non-software projects 🛠️](#github-for-non-software-projects-)
+  - [Mechanics project](#mechanics-project)
+    - [Changelog](#changelog)
+  - [Electronics project](#electronics-project)
+    - [Changelog](#changelog-1)
+  - [Release process automation](#release-process-automation)
 - [GitHub labels management 🏷️](#github-labels-management-)
   - [Usage](#usage)
 - [Documentation 📖](#documentation-)
@@ -264,10 +270,7 @@ directly from a commit that was tagged with the release tag.
 This process is automated with GitHub Actions with the "Basic" group of workflow files. More about
 this [here](https://github.com/IRNAS/irnas-workflows-software).
 
-## Release artifacts naming scheme 📦
-
-**Important**: this section is relevant only for software and firmware projects as the release
-process for mechanical and hardware projects still yet needs to be defined.
+## Release artifacts naming scheme for software/firmware projects 📦
 
 ### General rules
 
@@ -363,6 +366,60 @@ Firmware project with application and bootloader firmware, and various sets of b
   - `largerobot-bl-hv1.0.0-v1.0.0-log.hex`
   - `largerobot-app-hv1.4.0-v1.0.0-rf.hex`
   - `largerobot-bl-hv1.0.0-v1.0.0-rf.hex`
+
+## GitHub for non-software projects 🛠️
+
+This section describes the expected content of the GitHub repositories for non-software project.
+
+### Mechanics project
+
+Below files should be commited to the GitHub repository:
+
+- STEP files
+- STL files
+- Bill of material file (BOM)
+- project documentation and images
+
+Below files should be uploaded as a part of the release:
+
+- STEP, STL and BOM files, compressed together as a single zip file.
+- Release notes.
+
+#### Changelog
+
+Entries in the changelog should contain:
+
+- Description of the changes (see above [changelog](#changelog-) section)
+
+Entries in the changelog do not have to contain images.
+
+### Electronics project
+
+Below files should be committed to the GitHub repository:
+
+- Complete Altium project
+- project documentation and images
+
+Below files should be uploaded as a part of the release:
+
+- output files of the Altium release generation script (FAB, PCBA, etc.)
+- Release notes.
+
+#### Changelog
+
+Entries in the changelog should contain:
+
+- Description of the changes (see above [changelog](#changelog-) section)
+- Image of the PCB
+- Link to the Altium 365 project
+
+### Release process automation
+
+<!-- prettier-ignore -->
+> [!NOTE]
+> GitHub Action release workflow will automatically compress files in `release/` folder in a zip
+> file and attach it to the release assets during release process. It will also automatically
+> generate release notes from the latest section from the `CHANGELOG.md` file.
 
 ## GitHub labels management 🏷️
 
