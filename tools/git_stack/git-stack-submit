@@ -1,0 +1,835 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2181
+#
+# git-stack-submit - Submit stacked branches as pull/merge requests
+#
+# A replacement for 'gt submit' that pushes all branches in a stack
+# and creates PRs/MRs for each branch targeting the previous branch.
+#
+
+set -euo pipefail
+
+# Configuration
+DRY_RUN=false
+VERBOSE=false
+UPDATE_ONLY=false
+REMOTE="origin"
+TEMPLATE_MODE=""
+
+export LC_ALL=C
+
+# Source shared library
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=/dev/null
+source "${SCRIPT_DIR}/_git-stack-lib.sh"
+
+# Helper functions
+timer_start() {
+    # Substitution is need for EPOCHREALTIME and bc to work together.
+    _TIMER_START=${EPOCHREALTIME/,/.}
+}
+timer_start
+
+timer_elapsed_ms() {
+    local msg="$1"
+
+    local now=${EPOCHREALTIME/,/.}
+
+    local seconds
+    seconds=$(LC_NUMERIC=C bc -l <<<"$now - $_TIMER_START")
+    seconds=$(printf "%.03f" "$seconds")
+
+    if [ -n "$msg" ]; then
+        echo -e "$seconds s: $msg"
+    else
+        echo "$seconds s"
+    fi
+}
+
+show_help() {
+    cat <<'EOF'
+git-stack-submit - Submit stacked branches as pull/merge requests
+
+USAGE:
+    git-stack-submit [OPTIONS]
+
+DESCRIPTION:
+    Pushes all branches in the stack from trunk to the current branch and
+    creates or updates pull requests (GitHub) or merge requests (GitLab)
+    for each branch. Each PR/MR targets the previous branch in the stack.
+
+    This is a replacement for 'gt submit' that works without a paid subscription.
+
+OPTIONS:
+    -n, --dry-run       Show what would be done without making changes
+
+    -u, --update-only   Only push branches to remote, don't create new PRs/MRs
+                        Existing PRs/MRs will be updated via the push
+
+    -v, --verbose       Show detailed output
+
+    -h,                 Show this help message
+
+PR/MR METADATA:
+    The script uses commit messages to populate PR/MR metadata:
+    - PR/MR title: First line of the first commit on each branch
+    - PR/MR description: Remaining lines of the first commit message
+
+    You will be prompted to choose how to create PR description:
+    A) Use commit message only (ignore templates)
+    B) Use commit message + PR template (if found)
+    C) Edit in $EDITOR before creating PR/MR
+
+REQUIREMENTS:
+    - Graphite CLI (gt) must be installed and configured
+    - GitHub CLI (gh) for GitHub repositories, or
+    - GitLab CLI (glab) for GitLab repositories
+    - Repository must be a git repository with a configured remote
+
+EOF
+}
+
+parse_args() {
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+        -n | --dry-run)
+            DRY_RUN=true
+            shift
+            ;;
+        -u | --update-only)
+            UPDATE_ONLY=true
+            shift
+            ;;
+        -v | --verbose)
+            VERBOSE=true
+            shift
+            ;;
+        -h)
+            show_help
+            exit 0
+            ;;
+        *)
+            print_error "Unknown option: $1"
+            echo "Use --help for usage information"
+            exit 1
+            ;;
+        esac
+    done
+}
+
+# Build stack of branches from trunk to current branch
+build_stack() {
+    local trunk="$1"
+    local current="$2"
+
+    if [[ $VERBOSE == true ]]; then
+        print_info "Building stack from $trunk to $current..." >&2
+    fi
+
+    # Get gt log output
+    local gt_log
+    gt_log=$(gt log short -s 2>&1)
+
+    if [[ $? -ne 0 ]]; then
+        print_error "Failed to get stack information from 'gt log short -s'" >&2
+        echo "Output: $gt_log" >&2
+        exit 1
+    fi
+
+    # Parse the stack structure
+    # gt log short -s shows branches in reverse order (current at top, trunk at bottom)
+    # Example:
+    # ◯  branch-3
+    # ◉  branch-2 (current)
+    # ◯  branch-1
+    # ◯  main
+
+    local -a all_branches=()
+    local -a stack=()
+
+    # Collect all branches from the log (bottom to top = trunk to current)
+    while IFS= read -r line; do
+        # Skip empty lines and lines that don't contain branch info
+        if [[ -z $line ]] || [[ $line =~ ^[[:space:]]*$ ]]; then
+            continue
+        fi
+
+        # Extract branch name - look for patterns like "◯ branch-name" or "◉ branch-name"
+        # Branch names can contain letters, numbers, hyphens, underscores, slashes, dots
+        if [[ $line =~ [◯◉][[:space:]─│┘]*([a-zA-Z0-9/_.-]+) ]]; then
+            local branch="${BASH_REMATCH[1]}"
+            # Prepend to get bottom-to-top order (trunk first)
+            all_branches=("$branch" "${all_branches[@]}")
+        fi
+    done <<<"$gt_log"
+
+    # Find trunk and current branch positions
+    local trunk_idx=-1
+    local current_idx=-1
+
+    for i in "${!all_branches[@]}"; do
+        if [[ ${all_branches[$i]} == "$trunk" ]]; then
+            trunk_idx=$i
+        fi
+        if [[ ${all_branches[$i]} == "$current" ]]; then
+            current_idx=$i
+        fi
+    done
+
+    if [[ $trunk_idx -eq -1 ]]; then
+        print_error "Trunk branch '$trunk' not found in stack" >&2
+        echo "Available branches: ${all_branches[*]}" >&2
+        exit 1
+    fi
+
+    if [[ $current_idx -eq -1 ]]; then
+        print_error "Current branch '$current' not found in stack" >&2
+        echo "Available branches: ${all_branches[*]}" >&2
+        exit 1
+    fi
+
+    # Build stack from trunk to current (exclusive of trunk)
+    if [[ $current_idx -gt $trunk_idx ]]; then
+        # Current is after trunk (normal case)
+        for ((i = trunk_idx + 1; i <= current_idx; i++)); do
+            stack+=("${all_branches[$i]}")
+        done
+    elif [[ $current_idx -lt $trunk_idx ]]; then
+        # Current is before trunk (this shouldn't happen in normal workflow)
+        print_error "Current branch appears before trunk in stack - unexpected state" >&2
+        exit 1
+    else
+        # Current is trunk - nothing to do
+        print_warning "Current branch is trunk branch. Nothing to submit." >&2
+        exit 0
+    fi
+
+    if [[ ${#stack[@]} -eq 0 ]]; then
+        print_warning "No branches found between trunk and current branch" >&2
+        exit 0
+    fi
+
+    # Return stack as newline-separated list
+    printf '%s\n' "${stack[@]}"
+}
+
+# Get first commit message on a branch (relative to its parent)
+get_first_commit_message() {
+    local branch="$1"
+    local base_branch="$2"
+
+    # Get the first commit on this branch that's not on base_branch
+    local first_commit
+    first_commit=$(git log --reverse --format=%H "$base_branch..$branch" | head -n 1)
+
+    if [[ -z $first_commit ]]; then
+        print_error "No commits found on branch '$branch' relative to '$base_branch'"
+        exit 1
+    fi
+
+    # Get the full commit message
+    git log -1 --format=%B "$first_commit"
+}
+
+# Extract title and description from commit message
+extract_pr_metadata() {
+    local commit_message="$1"
+
+    # First line is title
+    local title
+    title=$(echo "$commit_message" | head -n 1)
+
+    # Remaining lines are description (skip the first line and any blank line after it)
+    local description
+    description=$(echo "$commit_message" | tail -n +2 | sed '/^$/d')
+
+    echo "$title"
+    echo "---DESCRIPTION---"
+    echo "$description"
+}
+
+# Check if PR/MR exists for a branch with specific base
+pr_exists() {
+    local platform="$1"
+    local branch="$2"
+    local base_branch="$3"
+
+    if [[ $platform == "github" ]]; then
+        # Check if PR exists for this branch targeting the base branch
+        local pr_count
+        pr_count=$(gh pr list --head "$branch" --base "$base_branch" --json number --jq 'length' 2>&1 || echo "0")
+        [[ $pr_count -gt 0 ]]
+    else
+        # GitLab
+        local mr_list
+        mr_list=$(glab mr list --source-branch="$branch" --target-branch="$base_branch" 2>&1 | grep -v "No open merge requests" || true)
+        [[ -n $mr_list ]]
+    fi
+}
+
+# Check if branch needs sync (local differs from remote)
+needs_sync() {
+    local branch="$1"
+
+    # Check if remote branch exists
+    if ! git rev-parse "origin/$branch" &>/dev/null; then
+        # Remote branch doesn't exist, needs push
+        return 0
+    fi
+
+    # Compare local and remote
+    local local_sha
+    local remote_sha
+    local_sha=$(git rev-parse "$branch" 2>/dev/null)
+    remote_sha=$(git rev-parse "origin/$branch" 2>/dev/null)
+
+    [[ $local_sha != "$remote_sha" ]]
+}
+
+# Get PR template path if it exists
+get_pr_template_path() {
+    local platform="$1"
+
+    if [[ $platform == "github" ]]; then
+        # Check common GitHub PR template locations
+        for path in .github/pull_request_template.md .github/PULL_REQUEST_TEMPLATE.md PULL_REQUEST_TEMPLATE.md; do
+            if [[ -f $path ]]; then
+                echo "$path"
+                return 0
+            fi
+        done
+    else
+        # GitLab - check for default template
+        if [[ -f ".gitlab/merge_request_templates/Default.md" ]]; then
+            echo ".gitlab/merge_request_templates/Default.md"
+            return 0
+        fi
+    fi
+
+    return 1
+}
+
+# Prompt user for template handling mode
+prompt_template_mode() {
+    local platform="$1"
+
+    # Check if template exists
+    local template_path
+    template_path=$(get_pr_template_path "$platform" || echo "")
+
+    echo ""
+    if [[ -z $template_path ]]; then
+        # No template found, show only commit message and editor options
+        print_info "How would you like to create PR description?"
+        print_info "  A) Use commit message"
+        # shellcheck disable=SC2016
+        print_info '  B) Edit in $EDITOR before creating PR'
+        echo ""
+        read -p "Choose [A/B]: " -n 1 -r choice
+        echo ""
+
+        case "$choice" in
+        A | a)
+            TEMPLATE_MODE="commit-only"
+            ;;
+        B | b)
+            TEMPLATE_MODE="editor"
+            ;;
+        *)
+            print_error "Invalid choice. Please select A or B."
+            prompt_template_mode "$platform"
+            ;;
+        esac
+    else
+        # Template found, show all three options with A and B switched
+        echo "How would you like to create PR description?"
+        echo "  A) Use commit message + PR template"
+        echo "  B) Use commit message only (ignore template)"
+        # shellcheck disable=SC2016
+        echo '  C) Edit in $EDITOR before creating PR'
+        echo ""
+        read -p "Choose [A/B/C]: " -n 1 -r choice
+        echo ""
+
+        case "$choice" in
+        A | a)
+            TEMPLATE_MODE="commit-and-template"
+            ;;
+        B | b)
+            TEMPLATE_MODE="commit-only"
+            ;;
+        C | c)
+            TEMPLATE_MODE="editor"
+            ;;
+        *)
+            print_error "Invalid choice. Please select A, B, or C."
+            prompt_template_mode "$platform"
+            ;;
+        esac
+    fi
+}
+
+# Create PR description based on template mode
+create_pr_description() {
+    local title="$1"
+    local description="$2"
+    local platform="$3"
+
+    case "$TEMPLATE_MODE" in
+    commit-only)
+        echo "$description"
+        ;;
+    commit-and-template)
+        local template_path
+        template_path=$(get_pr_template_path "$platform")
+        local template_content
+        template_content=$(cat "$template_path")
+
+        # Combine: commit message first, then template
+        echo "$description"
+        echo ""
+        echo "---"
+        echo ""
+        echo "$template_content"
+        ;;
+    editor)
+        # Create temporary file with initial content
+        local tmpfile
+        tmpfile=$(mktemp)
+
+        echo "$title" >"$tmpfile"
+        echo "" >>"$tmpfile"
+        echo "$description" >>"$tmpfile"
+
+        local template_path
+        if template_path=$(get_pr_template_path "$platform"); then
+            # shellcheck disable=SC2129
+            echo "" >>"$tmpfile"
+            echo "---" >>"$tmpfile"
+            echo "" >>"$tmpfile"
+            cat "$template_path" >>"$tmpfile"
+        fi
+
+        # Open in editor
+        ${EDITOR:-vi} "$tmpfile"
+
+        # Read back (skip first line which is title)
+        tail -n +2 "$tmpfile"
+        rm "$tmpfile"
+        ;;
+    esac
+}
+
+# Push branch to remote
+push_branch() {
+    local branch="$1"
+
+    local push_output
+    if [[ $VERBOSE == true ]]; then
+        git push --force-with-lease "$REMOTE" "$branch"
+    else
+        push_output=$(git push --force-with-lease "$REMOTE" "$branch" 2>&1)
+    fi
+
+    if [[ $? -ne 0 ]]; then
+        print_error "Failed to push branch '$branch' to remote '$REMOTE'"
+        if [[ $VERBOSE == false ]]; then
+            echo "$push_output" >&2
+        fi
+        exit 1
+    fi
+
+    print_success "✓ Pushed $branch"
+}
+
+# Create PR/MR
+create_pr() {
+    local platform="$1"
+    local branch="$2"
+    local base_branch="$3"
+
+    local pr_mr_label="PR"
+    if [[ $platform == "gitlab" ]]; then
+        pr_mr_label="MR"
+    fi
+
+    # Get commit message
+    local commit_message
+    commit_message=$(get_first_commit_message "$branch" "$base_branch")
+
+    # Extract title and description
+    local metadata
+    metadata=$(extract_pr_metadata "$commit_message")
+
+    local title
+    title=$(echo "$metadata" | head -n 1)
+
+    local description
+    description=$(echo "$metadata" | sed -n '/---DESCRIPTION---/,$p' | tail -n +2)
+
+    # Create full description based on template mode
+    local full_description
+    full_description=$(create_pr_description "$title" "$description" "$platform")
+
+    # Create PR/MR
+    local create_output
+    if [[ $platform == "github" ]]; then
+        if [[ $VERBOSE == true ]]; then
+            gh pr create --title "$title" --body "$full_description" --base "$base_branch" --head "$branch"
+        else
+            create_output=$(gh pr create --title "$title" --body "$full_description" --base "$base_branch" --head "$branch" 2>&1)
+        fi
+
+        if [[ $? -ne 0 ]]; then
+            print_error "Failed to create PR for branch '$branch'"
+            if [[ $VERBOSE == false ]]; then
+                echo "$create_output" >&2
+            fi
+            exit 1
+        fi
+    else
+        # GitLab
+        if [[ $VERBOSE == true ]]; then
+            glab mr create --title "$title" --description "$full_description" --target-branch "$base_branch" --source-branch "$branch"
+        else
+            create_output=$(glab mr create --title "$title" --description "$full_description" --target-branch "$base_branch" --source-branch "$branch" 2>&1)
+        fi
+
+        if [[ $? -ne 0 ]]; then
+            print_error "Failed to create MR for branch '$branch'"
+            if [[ $VERBOSE == false ]]; then
+                echo "$create_output" >&2
+            fi
+            exit 1
+        fi
+    fi
+
+    print_success "✓ Created $pr_mr_label for $branch"
+}
+
+# Validate stack consistency
+# If a branch needs PR creation, all child branches must also need PR creation
+validate_stack_consistency() {
+    local platform="$1"
+    local trunk="$2"
+    shift 2
+    local -a stack=("$@")
+
+    local pr_mr_label="PR"
+    if [[ $platform == "gitlab" ]]; then
+        pr_mr_label="MR"
+    fi
+
+    local base_branch="$trunk"
+    local found_missing_pr=false
+    local inconsistent_branch=""
+
+    for branch in "${stack[@]}"; do
+        local has_pr=false
+
+        # Check if PR exists for this branch -> base_branch
+        if pr_exists "$platform" "$branch" "$base_branch"; then
+            has_pr=true
+        fi
+
+        # If we previously found a missing PR, all subsequent branches must also be missing PRs
+        if [[ $found_missing_pr == true ]] && [[ $has_pr == true ]]; then
+            inconsistent_branch="$branch"
+            break
+        fi
+
+        # Track if we've found a branch without a PR
+        if [[ $has_pr == false ]]; then
+            found_missing_pr=true
+        fi
+
+        # This branch becomes the base for the next one
+        base_branch="$branch"
+    done
+
+    # If we found an inconsistent state, print the graph and error message
+    if [[ -n $inconsistent_branch ]]; then
+        print_info "Stack to submit (${#stack[@]} branches):"
+        echo ""
+        echo "  $trunk (trunk)"
+
+        base_branch="$trunk"
+        for branch in "${stack[@]}"; do
+            local action=""
+            local has_pr=false
+            local needs_push=false
+
+            # Check if PR exists for this branch -> base_branch
+            if pr_exists "$platform" "$branch" "$base_branch"; then
+                has_pr=true
+            fi
+
+            # Check if branch needs sync
+            if needs_sync "$branch"; then
+                needs_push=true
+            fi
+
+            # Determine action
+            if [[ $has_pr == true ]] && [[ $needs_push == true ]]; then
+                action="Sync to remote"
+            elif [[ $has_pr == true ]] && [[ $needs_push == false ]]; then
+                action="Skip"
+            else
+                action="Create $pr_mr_label"
+            fi
+
+            echo "  ↓"
+            echo "  $branch [$action]"
+
+            # This branch becomes the base for the next one
+            base_branch="$branch"
+        done
+
+        echo ""
+        print_error "Inconsistent stack state detected!"
+        echo ""
+        print_error "Branch '$inconsistent_branch' has a $pr_mr_label, but an earlier branch in the stack is missing one."
+        echo ""
+        print_info "This usually happens when a $pr_mr_label was manually closed or a branch was deleted."
+        print_info "Please run the following command to sync your local stack with the remote:"
+        echo ""
+        echo "  git-sync"
+        echo ""
+        print_info "Or alternatively:"
+        echo ""
+        echo "  gt sync"
+        echo ""
+        exit 1
+    fi
+}
+
+# Perform dry-run preview
+dry_run_preview() {
+    local platform="$1"
+    local trunk="$2"
+    shift 2
+    local -a stack=("$@")
+
+    local pr_mr_label="PR"
+    local pr_mr_label_plural="PRs"
+    if [[ $platform == "gitlab" ]]; then
+        pr_mr_label="MR"
+        pr_mr_label_plural="MRs"
+    fi
+
+    print_info "Running in dry-run mode. No branches will be pushed and no $pr_mr_label_plural will be opened or updated."
+    if [[ $UPDATE_ONLY == true ]]; then
+        print_info "Update-only mode: Will only push branches, no $pr_mr_label_plural will be created."
+    fi
+    echo ""
+
+    print_info "Stack to submit (${#stack[@]} branches):"
+    echo ""
+
+    echo "  $trunk (trunk)"
+    local base_branch="$trunk"
+    for branch in "${stack[@]}"; do
+        local action=""
+        local has_pr=false
+        local needs_push=false
+
+        # Check if PR exists for this branch -> base_branch
+        if pr_exists "$platform" "$branch" "$base_branch"; then
+            has_pr=true
+        fi
+
+        # Check if branch needs sync
+        if needs_sync "$branch"; then
+            needs_push=true
+        fi
+
+        # Determine action
+        if [[ $has_pr == true ]] && [[ $needs_push == true ]]; then
+            action="Sync to remote"
+        elif [[ $has_pr == true ]] && [[ $needs_push == false ]]; then
+            action="Skip"
+        else
+            # No PR exists
+            if [[ $UPDATE_ONLY == true ]]; then
+                # In update-only mode, we're just syncing branches
+                action="Sync to remote"
+            else
+                # In normal mode, we'll create a PR
+                action="Create $pr_mr_label"
+            fi
+        fi
+
+        echo "  ↓"
+        echo "  $branch [$action]"
+
+        # This branch becomes the base for the next one
+        base_branch="$branch"
+    done
+}
+
+# Main function
+main() {
+    parse_args "$@"
+
+    check_requirements
+
+    local platform
+    platform=$(get_platform)
+
+    if [[ $VERBOSE == true ]]; then
+        print_info "Platform: $platform" >&2
+    fi
+
+    local trunk
+    trunk=$(get_trunk_branch)
+
+    if [[ $VERBOSE == true ]]; then
+        print_info "Trunk branch: $trunk" >&2
+    fi
+
+    local current
+    current=$(get_current_branch)
+
+    if [[ $VERBOSE == true ]]; then
+        print_info "Current branch: $current" >&2
+    fi
+
+    # Build stack
+    local -a stack
+    mapfile -t stack < <(build_stack "$trunk" "$current")
+
+    if [[ ${#stack[@]} -eq 0 ]]; then
+        print_warning "No branches to submit" >&2
+        exit 0
+    fi
+
+    # Validate stack consistency before proceeding
+    validate_stack_consistency "$platform" "$trunk" "${stack[@]}"
+
+    # Set PR/MR labels based on platform
+    local pr_mr_label="PR"
+    local pr_mr_label_plural="PRs"
+    if [[ $platform == "gitlab" ]]; then
+        pr_mr_label="MR"
+        pr_mr_label_plural="MRs"
+    fi
+
+    # Handle dry-run mode
+    if [[ $DRY_RUN == true ]]; then
+        dry_run_preview "$platform" "$trunk" "${stack[@]}"
+        exit 0
+    fi
+
+    # Show stack with actions (same format as dry-run, but without the dry-run message)
+    print_info "Stack to submit (${#stack[@]} branches):"
+    echo ""
+
+    echo "  $trunk (trunk)"
+
+    # Check if any PR creation is needed and build action list
+    local needs_pr_creation=false
+    local base_branch="$trunk"
+    for branch in "${stack[@]}"; do
+        local action=""
+        local has_pr=false
+        local needs_push=false
+
+        # Check if PR exists for this branch -> base_branch
+        if pr_exists "$platform" "$branch" "$base_branch"; then
+            has_pr=true
+        fi
+
+        # Check if branch needs sync
+        if needs_sync "$branch"; then
+            needs_push=true
+        fi
+
+        # Determine action
+        if [[ $has_pr == true ]] && [[ $needs_push == true ]]; then
+            action="Sync to remote"
+        elif [[ $has_pr == true ]] && [[ $needs_push == false ]]; then
+            action="Skip"
+        else
+            # No PR exists
+            if [[ $UPDATE_ONLY == true ]]; then
+                # In update-only mode, we're just syncing branches
+                action="Sync to remote"
+            else
+                # In normal mode, we'll create a PR
+                action="Create $pr_mr_label"
+                needs_pr_creation=true
+            fi
+        fi
+
+        echo "  ↓"
+        echo "  $branch [$action]"
+
+        # This branch becomes the base for the next one
+        base_branch="$branch"
+    done
+
+    # Only prompt if PR creation is needed and not in update-only mode
+    if [[ $needs_pr_creation == true ]] && [[ $UPDATE_ONLY == false ]]; then
+        prompt_template_mode "$platform"
+        echo ""
+    else
+        # Set default mode when no prompt needed
+        TEMPLATE_MODE="commit-only"
+    fi
+
+    # Process each branch in the stack
+    local base_branch="$trunk"
+    local -a created_prs=()
+
+    for branch in "${stack[@]}"; do
+        echo "----------------------------------------"
+        print_info "Processing $branch"
+
+        # Push branch
+        push_branch "$branch"
+
+        # Skip PR creation if --update-only flag is set
+        if [[ $UPDATE_ONLY == true ]]; then
+            print_info "Skipped PR/MR creation (--update-only mode)"
+        else
+            # Check if PR exists
+            if pr_exists "$platform" "$branch" "$base_branch"; then
+                print_info "$pr_mr_label already exists for $branch (updated via push)"
+            else
+                # Create PR/MR
+                create_pr "$platform" "$branch" "$base_branch"
+                created_prs+=("$branch")
+            fi
+        fi
+
+        # This branch becomes the base for the next one
+        base_branch="$branch"
+        echo ""
+    done
+
+    echo "========================================"
+    print_success "Stack submission complete!"
+    echo ""
+
+    if [[ $UPDATE_ONLY == true ]]; then
+        print_info "All branches pushed to remote successfully!"
+    else
+        if [[ ${#created_prs[@]} -gt 0 ]]; then
+            print_info "Created ${#created_prs[@]} new $pr_mr_label(s):"
+            for branch in "${created_prs[@]}"; do
+                if [[ $platform == "github" ]]; then
+                    local pr_url
+                    pr_url=$(gh pr list --head "$branch" --json url --jq '.[0].url' 2>/dev/null)
+                    echo "  • $branch: $pr_url"
+                else
+                    echo "  • $branch"
+                fi
+            done
+        fi
+
+        print_info ""
+        print_info "All branches pushed and $pr_mr_label_plural created successfully!"
+    fi
+}
+
+main "$@"

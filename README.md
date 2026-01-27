@@ -19,6 +19,7 @@ repositories.
 - [Pre-commit] - Document dedicated to setting up the `pre-commit` tool.
 - [JS/TS config] - Document dedicated to setting up the host machine for JavaScript and TypeScript
   development.
+- [Git stack] - Tooling used for the branch stacking workflow.
 
 ## Other repositories 🌍
 
@@ -42,6 +43,7 @@ International License][cc-by-nc-sa].
 [developer guidelines]: docs/developer_guidelines.md
 [Pre-commit]: tools/pre-commit/README.md
 [JS/TS config]: tools/js_ts-config/README.md
+[Git stack]: tools/git_stack/README.md
 [github action workflows]: https://github.com/IRNAS/irnas-workflows-software
 [generic project template]: https://github.com/IRNAS/irnas-projects-template
 [zephyr project template]: https://github.com/IRNAS/irnas-zephyr-template

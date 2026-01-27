@@ -1,0 +1,410 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2181
+#
+# git-sync - Sync trunk and clean up merged branches
+#
+# A replacement for 'gt sync' that syncs trunk with remote, prompts to delete
+# branches for merged/closed PRs using 'gt delete', and warns about any
+# tracked branches that are out of sync with remote.
+
+set -euo pipefail
+
+# Configuration
+FORCE=false
+VERBOSE=false
+REMOTE="origin"
+OUT_OF_SYNC_COUNT=0
+
+export LC_ALL=C
+
+# Source shared library
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=/dev/null
+source "${SCRIPT_DIR}/_git-stack-lib.sh"
+
+# Helper functions
+show_help() {
+    cat <<'EOF'
+git-sync - Sync branches with remote
+
+USAGE:
+    git-sync [OPTIONS]
+
+DESCRIPTION:
+    Syncs trunk with remote and prompts to delete any local branches for PRs
+    that have been merged or closed. If trunk cannot be fast-forwarded to
+    match remote, overwrites trunk with the remote version.
+
+    This is a replacement for 'gt sync'.
+
+OPTIONS:
+    -f, --force         Don't prompt for confirmation before overwriting or
+                        deleting a branch
+
+    -v, --verbose       Show detailed output
+
+    -h,                 Show this help message
+
+REQUIREMENTS:
+    - Graphite CLI (gt) must be installed and configured
+    - GitHub CLI (gh) for GitHub repositories, or
+    - GitLab CLI (glab) for GitLab repositories
+    - Repository must be a git repository with a configured remote
+
+EOF
+}
+
+parse_args() {
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+        -f | --force)
+            FORCE=true
+            shift
+            ;;
+        -v | --verbose)
+            VERBOSE=true
+            shift
+            ;;
+        -h | --help)
+            show_help
+            exit 0
+            ;;
+        *)
+            print_error "Unknown option: $1"
+            echo "Use --help for usage information"
+            exit 1
+            ;;
+        esac
+    done
+}
+
+# Get all Graphite-tracked branches from cache file
+get_tracked_branches_from_cache() {
+    local top_dir
+    top_dir=$(git rev-parse --show-toplevel)
+    local cache_file="${top_dir}/.git/.graphite_cache_persist"
+
+    if [[ ! -f $cache_file ]]; then
+        if [[ $VERBOSE == true ]]; then
+            print_warning "Graphite cache file not found: $cache_file"
+        fi
+        return 0
+    fi
+
+    # Extract branch names from the cache file, excluding trunk and invalid branches
+    # The cache structure is: { "branches": [ ["branch1", {...}], ["branch2", {...}], ... ] }
+    # Filter out branches where validationResult is "TRUNK" or "BAD_PARENT_NAME"
+    jq -r '.branches[] | select(.[1].validationResult != "TRUNK" and .[1].validationResult != "BAD_PARENT_NAME") | .[0]' "$cache_file" 2>/dev/null || true
+}
+
+# Fetch from remote
+fetch_from_remote() {
+    print_info "Fetching from remote..."
+
+    local fetch_output
+    if [[ $VERBOSE == true ]]; then
+        git fetch "$REMOTE" --prune
+    else
+        fetch_output=$(git fetch "$REMOTE" --prune 2>&1)
+    fi
+
+    if [[ $? -ne 0 ]]; then
+        print_error "Failed to fetch from remote '$REMOTE'"
+        if [[ $VERBOSE == false ]]; then
+            echo "$fetch_output" >&2
+        fi
+        exit 1
+    fi
+
+    print_success "✓ Fetched from remote"
+}
+
+# Sync trunk branch
+sync_trunk() {
+    local trunk="$1"
+
+    print_info "Syncing trunk branch: $trunk"
+
+    # Check if remote trunk exists
+    if ! git rev-parse "origin/$trunk" &>/dev/null; then
+        print_warning "Remote trunk 'origin/$trunk' does not exist, skipping trunk sync"
+        return 0
+    fi
+
+    # Save current branch
+    local current_branch
+    current_branch=$(get_current_branch)
+
+    # Checkout trunk
+    if [[ $VERBOSE == true ]]; then
+        git checkout "$trunk"
+    else
+        git checkout "$trunk" &>/dev/null
+    fi
+
+    # Try fast-forward merge
+    if git merge --ff-only "origin/$trunk" &>/dev/null; then
+        print_success "✓ Fast-forwarded trunk to origin/$trunk"
+    else
+        # Can't fast-forward, need to reset
+        if [[ $FORCE == false ]]; then
+            print_warning "Trunk cannot be fast-forwarded to match remote."
+            echo "Local trunk has diverged from remote. This will overwrite local trunk with remote version."
+            read -p "Overwrite local trunk with remote? [y/N]: " -n 1 -r
+            echo ""
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                print_info "Skipping trunk sync"
+                # Return to original branch
+                git checkout "$current_branch" &>/dev/null
+                return 0
+            fi
+        fi
+
+        git reset --hard "origin/$trunk" &>/dev/null
+        print_success "✓ Reset trunk to origin/$trunk"
+    fi
+
+    # Return to original branch
+    if [[ $current_branch != "$trunk" ]]; then
+        if [[ $VERBOSE == true ]]; then
+            git checkout "$current_branch"
+        else
+            git checkout "$current_branch" &>/dev/null
+        fi
+    fi
+}
+
+# Check PR status
+check_pr_status() {
+    local platform="$1"
+    local branch="$2"
+
+    if [[ $platform == "github" ]]; then
+        # Get PR state and merged status
+        local pr_info
+        pr_info=$(gh pr view "$branch" --json state,mergedAt 2>&1 || echo "")
+
+        if [[ -z $pr_info ]]; then
+            # No PR found
+            echo "NONE"
+            return 0
+        fi
+
+        local state
+        local merged_at
+        state=$(echo "$pr_info" | jq -r '.state' 2>/dev/null || echo "")
+        merged_at=$(echo "$pr_info" | jq -r '.mergedAt' 2>/dev/null || echo "")
+
+        if [[ $state == "MERGED" ]] || [[ -n $merged_at && $merged_at != "null" ]]; then
+            echo "MERGED"
+        elif [[ $state == "CLOSED" ]]; then
+            echo "CLOSED"
+        elif [[ $state == "OPEN" ]]; then
+            echo "OPEN"
+        else
+            echo "UNKNOWN"
+        fi
+    else
+        # GitLab
+        local mr_info
+        mr_info=$(glab mr view "$branch" --output json 2>&1 || echo "")
+
+        if [[ -z $mr_info ]]; then
+            echo "NONE"
+            return 0
+        fi
+
+        local state
+        state=$(echo "$mr_info" | jq -r '.state' 2>/dev/null || echo "")
+
+        if [[ $state == "merged" ]]; then
+            echo "MERGED"
+        elif [[ $state == "closed" ]]; then
+            echo "CLOSED"
+        elif [[ $state == "open" ]]; then
+            echo "OPEN"
+        else
+            echo "UNKNOWN"
+        fi
+    fi
+}
+
+# Delete a branch using Graphite CLI
+delete_branch_with_graphite() {
+    local branch_to_delete="$1"
+
+    if [[ $VERBOSE == true ]]; then
+        print_info "Deleting branch '$branch_to_delete' using Graphite CLI"
+    fi
+
+    # Use gt delete to remove the branch, which properly updates Graphite's cache
+    # The --force flag skips confirmation prompts
+    if [[ $VERBOSE == true ]]; then
+        gt delete "$branch_to_delete" --force
+    else
+        gt delete "$branch_to_delete" --force &>/dev/null
+    fi
+
+    if [[ $? -eq 0 ]]; then
+        if [[ $VERBOSE == true ]]; then
+            print_success "✓ Deleted branch via Graphite"
+        fi
+        return 0
+    else
+        print_warning "Failed to delete branch using Graphite CLI, falling back to git"
+        return 1
+    fi
+}
+
+# Sync a single branch
+sync_branch() {
+    local branch="$1"
+    local platform="$2"
+    local trunk="$3"
+
+    # Skip trunk - already synced
+    if [[ $branch == "$trunk" ]]; then
+        return 0
+    fi
+
+    # Check PR/MR status first
+    local pr_status
+    pr_status=$(check_pr_status "$platform" "$branch")
+    echo "branch $branch is $pr_status"
+
+    # If PR/MR is merged or closed, handle cleanup
+    if [[ $pr_status == "MERGED" ]] || [[ $pr_status == "CLOSED" ]]; then
+        print_warning "Branch '$branch' has a $pr_status PR/MR"
+
+        # Check if local branch exists
+        local local_exists=false
+        if git rev-parse "$branch" &>/dev/null 2>&1; then
+            local_exists=true
+        fi
+
+        if [[ $local_exists == false ]]; then
+            # Local branch doesn't exist, nothing to delete
+            if [[ $VERBOSE == true ]]; then
+                print_info "Local branch '$branch' already deleted"
+            fi
+
+            # Still check if remote exists and warn
+            if git rev-parse "origin/$branch" &>/dev/null 2>&1; then
+                print_warning "Remote branch 'origin/$branch' still exists"
+                echo "You need to manually delete the remote branch and update the destination"
+                echo "branch of the next PR/MR in the stack (if there is one)."
+            fi
+
+            return 0
+        fi
+
+        # Prompt to delete local branch
+        local should_delete=false
+        if [[ $FORCE == false ]]; then
+            read -p "Delete local branch '$branch'? [y/N]: " -n 1 -r
+            echo ""
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                should_delete=true
+            fi
+        else
+            should_delete=true
+        fi
+
+        if [[ $should_delete == false ]]; then
+            print_info "Skipping deletion of $branch"
+            return 0
+        fi
+
+        # Check if we're currently on the branch to be deleted
+        local current_branch
+        current_branch=$(get_current_branch)
+
+        if [[ $current_branch == "$branch" ]]; then
+            # Switch to trunk before deleting
+            if [[ $VERBOSE == true ]]; then
+                print_info "Switching to trunk before deletion"
+                git checkout "$trunk"
+            else
+                git checkout "$trunk" &>/dev/null
+            fi
+        fi
+
+        # Delete the local branch using Graphite CLI
+        if delete_branch_with_graphite "$branch"; then
+            print_success "✓ Deleted local branch $branch"
+        else
+            # Fallback to git if Graphite fails
+            git branch -D "$branch" &>/dev/null
+            print_success "✓ Deleted local branch $branch (using git)"
+        fi
+
+        # After deleting local, check if remote still exists and warn
+        if git rev-parse "origin/$branch" &>/dev/null 2>&1; then
+            echo ""
+            print_warning "Remote branch 'origin/$branch' still exists"
+            echo "You need to manually delete the remote branch and update the destination"
+            echo "branch of the next PR/MR in the stack (if there is one)."
+        fi
+
+        return 0
+    fi
+}
+
+# Main function
+main() {
+    parse_args "$@"
+
+    check_requirements
+
+    local platform
+    platform=$(get_platform)
+
+    if [[ $VERBOSE == true ]]; then
+        print_info "Platform: $platform"
+    fi
+
+    local trunk
+    trunk=$(get_trunk_branch)
+
+    if [[ $VERBOSE == true ]]; then
+        print_info "Trunk branch: $trunk"
+    fi
+
+    # Fetch from remote
+    fetch_from_remote
+
+    # Sync trunk
+    sync_trunk "$trunk"
+
+    echo ""
+    print_info "Checking tracked branches..."
+
+    # Get all tracked branches from cache file
+    local -a tracked_branches
+    mapfile -t tracked_branches < <(get_tracked_branches_from_cache)
+
+    if [[ ${#tracked_branches[@]} -eq 0 ]]; then
+        print_warning "No tracked branches found"
+    else
+        if [[ $VERBOSE == true ]]; then
+            print_info "Found ${#tracked_branches[@]} tracked branches"
+        fi
+
+        # Sync each branch
+        for branch in "${tracked_branches[@]}"; do
+            sync_branch "$branch" "$platform" "$trunk"
+        done
+    fi
+
+    echo ""
+    print_success "Sync complete!"
+
+    # If any branches were out of sync, suggest running gt restack
+    if [[ $OUT_OF_SYNC_COUNT -gt 0 ]]; then
+        echo ""
+        print_info "Found $OUT_OF_SYNC_COUNT branch(es) out of sync with remote."
+        print_info 'Consider running "gt restack"'
+    fi
+}
+
+main "$@"
