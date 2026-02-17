@@ -345,7 +345,7 @@ might need minor changes to become relevant:
 #### Include statements
 
 Include statements should be placed at the top of the file, after the license header and before any
-other code. In header files, they should be placed after header guards and `extern C` guards.
+other code. In header files, they should be placed after header guards and before `extern C` guards.
 
 Include only what is necessary to compile the source code. Adding unnecessary includes means a
 longer compilation time, especially in large projects. Each header and corresponding source file
