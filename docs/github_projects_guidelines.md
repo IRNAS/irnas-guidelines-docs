@@ -268,7 +268,7 @@ Since we are following the [trunk-based development] branching model, a GitHub r
 directly from a commit that was tagged with the release tag.
 
 This process is automated with GitHub Actions with the "Basic" group of workflow files. More about
-this [here](https://github.com/IRNAS/irnas-workflows-software).
+this can be found in the [workflows](https://github.com/IRNAS/irnas-workflows-software) repo.
 
 ## Release artifacts naming scheme for software/firmware projects 📦
 
@@ -373,7 +373,7 @@ This section describes the expected content of the GitHub repositories for non-s
 
 ### Mechanics project
 
-Below files should be commited to the GitHub repository:
+Below files should be committed to the GitHub repository:
 
 - STEP files
 - STL files

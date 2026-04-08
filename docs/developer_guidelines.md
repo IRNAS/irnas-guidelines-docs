@@ -417,8 +417,8 @@ PEP8-compliant opinionated formatter with a limited set of configurable options.
 We slightly deviate from Black's default code style:
 
 - We use an improved string processing feature, which splits the long string literals and merges
-  short ones, more about this
-  [here](https://black.readthedocs.io/en/stable/the_black_code_style/future_style.html).
+  short ones, more about this can be read in the
+  [Preview style](https://black.readthedocs.io/en/stable/the_black_code_style/future_style.html).
 
 This means that you need to add a few extra arguments when using Black from the command-line or from
 your favorite editor:
@@ -511,9 +511,10 @@ Style should be automatically enforced by the linter and formatter. In VS Code t
 following two plugins: ESLint (for linting) and Prettier (for code formatting). Install them from
 **extensions** menu.
 
-One should use configuration files, which are available in this repo [here](/tools/js_ts-config).
-Files are organized in folders, depending of the project type (React, React Native or Node). All
-these files need to be located in the root directory of the target project.
+One should use configuration files, which are available in this repo, in
+[/tools/js_ts-config](/tools/js_ts-config) folder. Files are organized in folders, depending of the
+project type (React, React Native or Node). All these files need to be located in the root directory
+of the target project.
 
 List of files:
 
@@ -548,8 +549,8 @@ lines:
 
 #### Docstrings
 
-Use style comments from **JSDoc** for functions, interfaces, enums, and classes. Documentation is
-available [here](https://jsdoc.app/index.html).
+Use style comments from **JSDoc** for functions, interfaces, enums, and classes. See official
+[documentation](https://jsdoc.app/index.html) for more info.
 
 See the example below:
 
