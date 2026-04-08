@@ -1,95 +1,69 @@
-# `pre-commit`
+# `prek`
 
-`pre-commit` is a useful tool used by developers to ensure code quality and consistency before
-committing changes to Git. It automates the process of running various checks and tests on your
-codebase, helping catch potential issues early on and maintaining a clean and reliable codebase.
+`prek` is a useful tool used by developers to ensure code quality and consistency before committing
+changes to Git. It automates the process of running various checks and tests on your codebase,
+helping catch potential issues early on and maintaining a clean and reliable codebase.
 
-More concretely, the `pre-commit` tool is a framework that is capable of managing and running
-various multi-language tools, called _hooks_, whenever a specific [Git hook] runs.
+More concretely, the `prek` tool is a framework that is capable of managing and running various
+multi-language tools, called _hooks_, whenever a specific [Git hook] runs.
 
 [Git hook]: https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks
 
-A `.pre-commit-commit.yaml` file, located in the project root dir, defines exactly which hooks
+A `.pre-commit-config.yaml` file, located in the project root dir, defines exactly which hooks
 should run, with which arguments, and when.
 
-See our `.pre-commit-commit.yaml` file in the [irnas-zephyr-template] repository.
+See our `.pre-commit-config.yaml` file in the [irnas-zephyr-template] repository.
 
 [irnas-zephyr-template]: https://github.com/IRNAS/irnas-zephyr-template
 
-In essence, pre-commit will not allow you to create a commit until the codebase follows our
-guidelines.
+In essence, `prek` will not allow you to create a commit until the codebase follows our guidelines.
+
+<!-- prettier-ignore -->
+> [!NOTE]
+> `prek` is a faster, drop-in, replacement of `pre-commit`. They both use the same command, same
+> configuration file. In the past we use `pre-commit`, now we use `prek`.
 
 ## Setup
 
-To install `pre-commit` run:
+To install `prek` run:
 
 ```bash
-pip install pre-commit
-```
-
-### Fixing local `pre-commit` installation
-
-Skip this section if you don't have any issues with the `pre-commit` installation.
-
-Command `pre-commit install` can sometimes fail with the following error:
-
-```shell
-pre-commit install --install-hooks
-pre-commit installed at .git/hooks/pre-commit
-Running in migration mode with existing hooks at .git/hooks/commit-msg.legacy
-Use -f to use only pre-commit.
-pre-commit installed at .git/hooks/commit-msg
-An error has occurred: InvalidManifestError:
-==> File /home/user/.cache/pre-commit/repo61yo3iqm/.pre-commit-hooks.yaml
-==> At Hook(id='clang-format')
-==> At key: types_or
-==> At index 10
-=====> Type tag 'metal' is not recognized.  Try upgrading identify and pre-commit?
-Check the log at /home/user/.cache/pre-commit/pre-commit.log
-```
-
-The solution is to upgrade the `identify` and `pre-commit` packages:
-
-```bash
-pip install pre-commit --upgrade
-pip install identify --upgrade
+pip install prek
 ```
 
 ### System setup
 
-You can setup your `git` to automatically setup hooks on newly cloned repository, that uses
-`pre-commit`.
+You can setup your `git` to automatically setup hooks on newly cloned repository, that uses `prek`.
 
 ```bash
 git config --global init.templateDir ~/.git-template
-pre-commit init-templatedir ~/.git-template
+prek init-templatedir ~/.git-template
 ```
 
 If you don't want to do that you can do a repository setup below.
 
 ### Repository setup
 
-To make `pre-commit` run before every `git commit` you need to install it into the repository:
+To make `prek` run before every `git commit` you need to install it into the repository:
 
 ```bash
-pre-commit install
+prek install
 ```
 
-Every time you clone a project that uses `pre-commit` you should run `pre-commit install` before
-doing anything else.
+Every time you clone a project that uses `prek` you should run `prek install` before doing anything
+else.
 
 ## Expected workflow
 
-Developer's workflow with the `pre-commit` looks something like this:
+Developer's workflow with the `prek` looks something like this:
 
 1. You made some changes to the repository and you have added them with `git add` to the staging
    area.
 2. You run `git commit` to commit the files.
-3. The `pre-commit` tool automatically runs all hooks on your staged files and checks your commit
-   message.
+3. The `prek` tool automatically runs all hooks on your staged files and checks your commit message.
 4. If any of the hooks detects that there is a linting error or formatting error, it tries to fix it
-   and then reports an error. In cases where files were modified by the `pre-commit` hook, you get
-   back the below message:
+   and then reports an error. In cases where files were modified by the `prek` hook, you get back
+   the below message:
 
    ```shell
    prettier.................................................................Failed
@@ -99,10 +73,9 @@ Developer's workflow with the `pre-commit` looks something like this:
    docs/current_consumption.md
    ```
 
-   In other cases where some error is detected, the `pre-commit` will print it out.
+   In other cases where some error is detected, the `prek` will print it out.
 
-5. You fix the error, add newly modified files, run `git commit` and see `pre-commit` hooks run
-   again.
+5. You fix the error, add newly modified files, run `git commit` and see `prek` hooks run again.
 6. Repeat this until all errors are resolved, at that point, the commit is accepted and created.
 
 ## Hooks
@@ -110,12 +83,12 @@ Developer's workflow with the `pre-commit` looks something like this:
 The following section describes some of the hooks we are using which might require more knowledge
 from the developers.
 
-### General `pre-commit` tips
+### General `prek` tips
 
 #### Global file exclude
 
-If you have some folders in your repository, which you don't want `pre-commit` to check you can add
-`exclude` key to the top level of `.pre-commit-config.yaml` to filter them out, for example:
+If you have some folders in your repository, which you don't want `prek` to check you can add
+`exclude` key to the top level of `.prek-config.yaml` to filter them out, for example:
 
 ```yaml
 exclude: some/specific/dir/to/ignore
@@ -155,12 +128,12 @@ Multiple entry example:
 #### Hook specific configuration files
 
 Some hooks have their own configuration files that configure them. Whenever that is a case, a
-comment in the `.pre-commit-config.yaml` should mention that.
+comment in the `.prek-config.yaml` should mention that.
 
 ### `typos`
 
-[`typos`] is a source code spell checker. When used in combination with `pre-commit` tool finds and
-fixes spelling mistakes in the source code.
+[`typos`] is a source code spell checker. When used in combination with `prek` tool finds and fixes
+spelling mistakes in the source code.
 
 If the spelling solution is non-ambiguous the fix is applied automatically. Wherever it is
 ambiguous, as there is more than one solution, it emits an error message and gives the user a choice
@@ -225,24 +198,24 @@ git commit -e --file .git/COMMIT_EDITMSG
 
 ### Manual runs
 
-To manually run `pre-commit` on all files in the repository you can run:
+To manually run `prek` on all files in the repository you can run:
 
 ```bash
-pre-commit run --all-files
+prek run --all-files
 ```
 
-Without the `--all-files` flag `pre-commit` runs only on currently staged files.
+Without the `--all-files` flag `prek` runs only on currently staged files.
 
 To run only a specific hook you can run:
 
 ```bash
-pre-commit run --all-files <hook-id>
+prek run --all-files <hook-id>
 ```
 
 For example:
 
 ```bash
-pre-commit run --all-files clang-format
+prek run --all-files clang-format
 ```
 
 ### Testing commit messages
@@ -251,15 +224,15 @@ To test if your commit message passes the rules imposed by the `committed` tool,
 commit message to a file and then run:
 
 ```bash
-pre-commit run --hook-stage commit-msg committed --commit-msg-filename <file_with_commit_message>
+prek run --hook-stage commit-msg committed --commit-msg-filename <file_with_commit_message>
 ```
 
-### Skip running pre-commit hooks
+### Skip running prek hooks
 
 Not all hooks are perfect so sometimes you may need to skip execution of one or more hooks. There
 are two ways how you can do that.
 
-You can skip all `pre-commit` hooks:
+You can skip all `prek` hooks:
 
 ```bash
 git commit --no-verify
