@@ -32,7 +32,60 @@ print_info() {
 }
 
 print_warning() {
-    echo -e "${YELLOW}$1${NC}"
+    echo -e "${YELLOW}$1${NC}" >&2
+}
+
+_fmt_cmd() {
+    local cmd=""
+    local arg
+    for arg in "$@"; do
+        cmd+=$(printf '%q ' "$arg")
+    done
+    echo "${cmd% }"
+}
+
+run() {
+    # Run a command and return its combined output on success.
+    # On failure, print a standardized error with the command and output,
+    # then exit with the command's return code.
+    local out_file rc
+    out_file=$(mktemp)
+
+    if "$@" >"$out_file" 2>&1; then
+        cat "$out_file"
+        rm -f "$out_file"
+        return 0
+    else
+        rc=$?
+    fi
+
+    print_error "Command failed (rc=$rc): $(_fmt_cmd "$@")\n"
+
+    echo "Command output:" >&2
+    if [[ -s $out_file ]]; then
+        cat "$out_file" >&2
+    fi
+
+    rm -f "$out_file"
+    exit "$rc"
+}
+
+try() {
+    # Run a command and return its combined output on success.
+    # On failure, stay quiet and return the original non-zero exit code.
+    local out_file rc
+    out_file=$(mktemp)
+
+    if "$@" >"$out_file" 2>&1; then
+        cat "$out_file"
+        rm -f "$out_file"
+        return 0
+    else
+        rc=$?
+    fi
+
+    rm -f "$out_file"
+    return "$rc"
 }
 
 # Check if required commands are available
@@ -44,13 +97,13 @@ check_requirements() {
 
     if ! command -v gt &>/dev/null; then
         print_error "Graphite CLI (gt) is not installed or not in PATH"
-        echo "Please install Graphite: https://graphite.dev/docs/installing-the-cli"
+        echo "Please install Graphite: https://graphite.dev/docs/installing-the-cli" >&2
         exit 1
     fi
 
     if ! command -v jq &>/dev/null; then
         print_error "jq is not installed or not in PATH"
-        echo "Please install jq: https://stedolan.github.io/jq/"
+        echo "Please install jq: https://stedolan.github.io/jq/" >&2
         exit 1
     fi
 }
@@ -61,49 +114,52 @@ check_platform_auth() {
 
     if [[ $platform == "github" ]]; then
         if ! command -v gh &>/dev/null; then
-            print_error "GitHub CLI (gh) is not installed or not in PATH" >&2
+            print_error "GitHub CLI (gh) is not installed or not in PATH"
             echo "Please install GitHub CLI: https://cli.github.com/" >&2
             exit 1
         fi
 
         if ! gh auth status &>/dev/null; then
-            print_error "Not authenticated with GitHub CLI (gh)" >&2
+            print_error "Not authenticated with GitHub CLI (gh)"
             echo "Please run: gh auth login" >&2
             exit 1
         fi
     elif [[ $platform == "gitlab" ]]; then
         if ! command -v glab &>/dev/null; then
-            print_error "GitLab CLI (glab) is not installed or not in PATH" >&2
+            print_error "GitLab CLI (glab) is not installed or not in PATH"
             echo "Please install GitLab CLI: https://gitlab.com/gitlab-org/cli" >&2
             exit 1
         fi
 
         if ! glab auth status &>/dev/null; then
-            print_error "Not authenticated with GitLab CLI (glab)" >&2
+            print_error "Not authenticated with GitLab CLI (glab)"
             echo "Please run: glab auth login" >&2
             exit 1
         fi
     else
-        print_error "Unknown platform '$platform'" >&2
+        print_error "Unknown platform '$platform'"
         exit 1
     fi
 }
 
 # Detect whether this is a GitHub or GitLab repository
 detect_platform() {
-    local gh_output
-
     if [[ ${VERBOSE:-false} == true ]]; then
         print_info "Detecting platform (GitHub or GitLab)..." >&2
     fi
 
-    # Try GitHub first
-    gh_output=$(gh repo view 2>&1 || true)
+    local top_dir remote_url
+    top_dir=$(git rev-parse --show-toplevel)
+    remote_url=$(git config --get "remote.origin.url" || true)
 
-    if ! echo "$gh_output" | grep -q "none of the git remotes configured for this repository point to a known GitHub host"; then
-        # GitHub detected
+    if [[ -z $remote_url ]] && [[ -f "$top_dir/.git/config" ]]; then
+        print_error "No remote.origin.url configured for this repository"
+        exit 1
+    fi
+
+    if [[ $remote_url =~ github ]]; then
         if ! command -v gh &>/dev/null; then
-            print_error "This is a GitHub repository but 'gh' CLI is not installed" >&2
+            print_error "This is a GitHub repository but 'gh' CLI is not installed"
             echo "Please install GitHub CLI: https://cli.github.com/" >&2
             exit 1
         fi
@@ -111,17 +167,24 @@ detect_platform() {
         return 0
     fi
 
-    # Try GitLab
-    if ! command -v glab &>/dev/null; then
-        print_error "This is a GitLab repository but 'glab' CLI is not installed" >&2
-        echo "Please install GitLab CLI: https://gitlab.com/gitlab-org/cli" >&2
-        exit 1
+    if [[ $remote_url =~ gitlab ]]; then
+        if ! command -v glab &>/dev/null; then
+            print_error "This is a GitLab repository but 'glab' CLI is not installed"
+            echo "Please install GitLab CLI: https://gitlab.com/gitlab-org/cli" >&2
+            exit 1
+        fi
+        echo "gitlab"
+        return 0
     fi
-    echo "gitlab"
+
+    print_error "Unable to detect platform from remote URL: $remote_url"
+    print_error "Only GitHub and GitLab repositories are supported"
+    exit 1
 }
 
 # Get platform with caching
 get_platform() {
+    local top_dir
     top_dir=$(git rev-parse --show-toplevel)
     local cache_file="${top_dir}/.git/.git-stack-submit-origin"
 
@@ -155,17 +218,16 @@ get_trunk_branch() {
     local config_file="${top_dir}/.git/.graphite_repo_config"
 
     if [[ ! -f $config_file ]]; then
-        print_error "Graphite config file not found: $config_file" >&2
+        print_error "Graphite config file not found: $config_file"
         echo "Please run 'gt repo init' to initialize Graphite in this repo" >&2
         exit 1
     fi
 
     local trunk
-    trunk=$(jq -r '.trunk' "$config_file" 2>&1)
+    trunk=$(run jq -r '.trunk' "$config_file")
 
-    if [[ $? -ne 0 ]] || [[ -z $trunk ]] || [[ $trunk == "null" ]]; then
-        print_error "Failed to read trunk branch from $config_file" >&2
-        echo "Output: $trunk" >&2
+    if [[ -z $trunk ]] || [[ $trunk == "null" ]]; then
+        print_error "Failed to read trunk branch from $config_file"
         exit 1
     fi
 
@@ -181,13 +243,7 @@ get_current_branch() {
 get_tracked_branches() {
     # Use gt log short -s to get all tracked branches
     local gt_log
-    gt_log=$(gt log short -s --all 2>&1)
-
-    if [[ $? -ne 0 ]]; then
-        print_error "Failed to get tracked branches from 'gt log short -s --all'" >&2
-        echo "Output: $gt_log" >&2
-        exit 1
-    fi
+    gt_log=$(run gt log short -s --all)
 
     local -a branches=()
 

@@ -8,6 +8,7 @@
 # tracked branches that are out of sync with remote.
 
 set -euo pipefail
+shopt -s inherit_errexit 2>/dev/null || true
 
 # Configuration
 FORCE=false
@@ -45,10 +46,11 @@ OPTIONS:
 
     -h,                 Show this help message
 
-REQUIREMENTS:
+    REQUIREMENTS:
     - Graphite CLI (gt) must be installed and configured
     - GitHub CLI (gh) for GitHub repositories, or
     - GitLab CLI (glab) for GitLab repositories
+    - Authenticated platform CLI session (`gh auth login` or `glab auth login`)
     - Repository must be a git repository with a configured remote
 
 EOF
@@ -94,26 +96,23 @@ get_tracked_branches_from_cache() {
     # Extract branch names from the cache file, excluding trunk and invalid branches
     # The cache structure is: { "branches": [ ["branch1", {...}], ["branch2", {...}], ... ] }
     # Filter out branches where validationResult is "TRUNK" or "BAD_PARENT_NAME"
-    jq -r '.branches[] | select(.[1].validationResult != "TRUNK" and .[1].validationResult != "BAD_PARENT_NAME") | .[0]' "$cache_file" 2>/dev/null || true
+    local branches
+    if ! branches=$(try jq -r '.branches[] | select(.[1].validationResult != "TRUNK" and .[1].validationResult != "BAD_PARENT_NAME") | .[0]' "$cache_file"); then
+        print_warning "Failed to parse Graphite cache file: $cache_file"
+        return 0
+    fi
+
+    echo "$branches"
 }
 
 # Fetch from remote
 fetch_from_remote() {
     print_info "Fetching from remote..."
 
-    local fetch_output
     if [[ $VERBOSE == true ]]; then
-        git fetch "$REMOTE" --prune
+        run git fetch "$REMOTE" --prune
     else
-        fetch_output=$(git fetch "$REMOTE" --prune 2>&1)
-    fi
-
-    if [[ $? -ne 0 ]]; then
-        print_error "Failed to fetch from remote '$REMOTE'"
-        if [[ $VERBOSE == false ]]; then
-            echo "$fetch_output" >&2
-        fi
-        exit 1
+        run git fetch "$REMOTE" --prune >/dev/null
     fi
 
     print_success "✓ Fetched from remote"
@@ -136,14 +135,10 @@ sync_trunk() {
     current_branch=$(get_current_branch)
 
     # Checkout trunk
-    if [[ $VERBOSE == true ]]; then
-        git checkout "$trunk"
-    else
-        git checkout "$trunk" &>/dev/null
-    fi
+    run git checkout "$trunk" >/dev/null
 
     # Try fast-forward merge
-    if git merge --ff-only "origin/$trunk" &>/dev/null; then
+    if try git merge --ff-only "origin/$trunk" >/dev/null; then
         print_success "✓ Fast-forwarded trunk to origin/$trunk"
     else
         # Can't fast-forward, need to reset
@@ -155,22 +150,18 @@ sync_trunk() {
             if [[ ! $REPLY =~ ^[Yy]$ ]]; then
                 print_info "Skipping trunk sync"
                 # Return to original branch
-                git checkout "$current_branch" &>/dev/null
+                run git checkout "$current_branch" >/dev/null
                 return 0
             fi
         fi
 
-        git reset --hard "origin/$trunk" &>/dev/null
+        run git reset --hard "origin/$trunk" >/dev/null
         print_success "✓ Reset trunk to origin/$trunk"
     fi
 
     # Return to original branch
     if [[ $current_branch != "$trunk" ]]; then
-        if [[ $VERBOSE == true ]]; then
-            git checkout "$current_branch"
-        else
-            git checkout "$current_branch" &>/dev/null
-        fi
+        run git checkout "$current_branch" >/dev/null
     fi
 }
 
@@ -180,20 +171,25 @@ check_pr_status() {
     local branch="$2"
 
     if [[ $platform == "github" ]]; then
-        # Get PR state and merged status
-        local pr_info
-        pr_info=$(gh pr view "$branch" --json state,mergedAt 2>&1 || echo "")
+        local pr_list
+        pr_list=$(run gh pr list --head "$branch" --json state,mergedAt)
 
-        if [[ -z $pr_info ]]; then
-            # No PR found
+        local pr_count
+        pr_count=$(run jq 'length' <<<"$pr_list")
+
+        if [[ $pr_count -eq 0 ]]; then
             echo "NONE"
             return 0
         fi
 
+        # Get PR state and merged status
+        local pr_info
+        pr_info=$(run jq '.[0]' <<<"$pr_list")
+
         local state
         local merged_at
-        state=$(echo "$pr_info" | jq -r '.state' 2>/dev/null || echo "")
-        merged_at=$(echo "$pr_info" | jq -r '.mergedAt' 2>/dev/null || echo "")
+        state=$(run jq -r '.state' <<<"$pr_info")
+        merged_at=$(run jq -r '.mergedAt' <<<"$pr_info")
 
         if [[ $state == "MERGED" ]] || [[ -n $merged_at && $merged_at != "null" ]]; then
             echo "MERGED"
@@ -206,16 +202,22 @@ check_pr_status() {
         fi
     else
         # GitLab
-        local mr_info
-        mr_info=$(glab mr view "$branch" --output json 2>&1 || echo "")
+        local mr_list
+        mr_list=$(run glab mr list --source-branch="$branch" --output json)
 
-        if [[ -z $mr_info ]]; then
+        local mr_count
+        mr_count=$(run jq 'length' <<<"$mr_list")
+
+        if [[ $mr_count -eq 0 ]]; then
             echo "NONE"
             return 0
         fi
 
+        local mr_info
+        mr_info=$(run jq '.[0]' <<<"$mr_list")
+
         local state
-        state=$(echo "$mr_info" | jq -r '.state' 2>/dev/null || echo "")
+        state=$(run jq -r '.state' <<<"$mr_info")
 
         if [[ $state == "merged" ]]; then
             echo "MERGED"
@@ -239,21 +241,16 @@ delete_branch_with_graphite() {
 
     # Use gt delete to remove the branch, which properly updates Graphite's cache
     # The --force flag skips confirmation prompts
-    if [[ $VERBOSE == true ]]; then
-        gt delete "$branch_to_delete" --force
-    else
-        gt delete "$branch_to_delete" --force &>/dev/null
-    fi
-
-    if [[ $? -eq 0 ]]; then
+    if try gt delete "$branch_to_delete" --force >/dev/null; then
         if [[ $VERBOSE == true ]]; then
             print_success "✓ Deleted branch via Graphite"
         fi
         return 0
-    else
-        print_warning "Failed to delete branch using Graphite CLI, falling back to git"
-        return 1
     fi
+
+    print_warning "Failed to delete branch using Graphite CLI, falling back to git"
+
+    return 1
 }
 
 # Sync a single branch
@@ -264,13 +261,19 @@ sync_branch() {
 
     # Skip trunk - already synced
     if [[ $branch == "$trunk" ]]; then
+        if [[ $VERBOSE == true ]]; then
+            print_info "Skipping trunk branch: $branch"
+        fi
         return 0
     fi
 
     # Check PR/MR status first
     local pr_status
     pr_status=$(check_pr_status "$platform" "$branch")
-    echo "branch $branch is $pr_status"
+
+    if [[ $VERBOSE == true ]]; then
+        print_info "Branch '$branch' PR/MR status: $pr_status"
+    fi
 
     # If PR/MR is merged or closed, handle cleanup
     if [[ $pr_status == "MERGED" ]] || [[ $pr_status == "CLOSED" ]]; then
@@ -323,10 +326,8 @@ sync_branch() {
             # Switch to trunk before deleting
             if [[ $VERBOSE == true ]]; then
                 print_info "Switching to trunk before deletion"
-                git checkout "$trunk"
-            else
-                git checkout "$trunk" &>/dev/null
             fi
+            run git checkout "$trunk" >/dev/null
         fi
 
         # Delete the local branch using Graphite CLI
@@ -334,7 +335,7 @@ sync_branch() {
             print_success "✓ Deleted local branch $branch"
         else
             # Fallback to git if Graphite fails
-            git branch -D "$branch" &>/dev/null
+            run git branch -D "$branch" >/dev/null
             print_success "✓ Deleted local branch $branch (using git)"
         fi
 

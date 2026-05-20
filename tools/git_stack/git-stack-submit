@@ -8,6 +8,7 @@
 #
 
 set -euo pipefail
+shopt -s inherit_errexit 2>/dev/null || true
 
 # Configuration
 DRY_RUN=false
@@ -80,10 +81,11 @@ PR/MR METADATA:
     B) Use commit message + PR template (if found)
     C) Edit in $EDITOR before creating PR/MR
 
-REQUIREMENTS:
+    REQUIREMENTS:
     - Graphite CLI (gt) must be installed and configured
     - GitHub CLI (gh) for GitHub repositories, or
     - GitLab CLI (glab) for GitLab repositories
+    - Authenticated platform CLI session (`gh auth login` or `glab auth login`)
     - Repository must be a git repository with a configured remote
 
 EOF
@@ -128,13 +130,7 @@ build_stack() {
 
     # Get gt log output
     local gt_log
-    gt_log=$(gt log short -s 2>&1)
-
-    if [[ $? -ne 0 ]]; then
-        print_error "Failed to get stack information from 'gt log short -s'" >&2
-        echo "Output: $gt_log" >&2
-        exit 1
-    fi
+    gt_log=$(run gt log short -s)
 
     # Parse the stack structure
     # gt log short -s shows branches in reverse order (current at top, trunk at bottom)
@@ -177,13 +173,13 @@ build_stack() {
     done
 
     if [[ $trunk_idx -eq -1 ]]; then
-        print_error "Trunk branch '$trunk' not found in stack" >&2
+        print_error "Trunk branch '$trunk' not found in stack"
         echo "Available branches: ${all_branches[*]}" >&2
         exit 1
     fi
 
     if [[ $current_idx -eq -1 ]]; then
-        print_error "Current branch '$current' not found in stack" >&2
+        print_error "Current branch '$current' not found in stack"
         echo "Available branches: ${all_branches[*]}" >&2
         exit 1
     fi
@@ -196,16 +192,16 @@ build_stack() {
         done
     elif [[ $current_idx -lt $trunk_idx ]]; then
         # Current is before trunk (this shouldn't happen in normal workflow)
-        print_error "Current branch appears before trunk in stack - unexpected state" >&2
+        print_error "Current branch appears before trunk in stack - unexpected state"
         exit 1
     else
         # Current is trunk - nothing to do
-        print_warning "Current branch is trunk branch. Nothing to submit." >&2
+        print_warning "Current branch is trunk branch. Nothing to submit."
         exit 0
     fi
 
     if [[ ${#stack[@]} -eq 0 ]]; then
-        print_warning "No branches found between trunk and current branch" >&2
+        print_warning "No branches found between trunk and current branch"
         exit 0
     fi
 
@@ -257,13 +253,15 @@ pr_exists() {
     if [[ $platform == "github" ]]; then
         # Check if PR exists for this branch targeting the base branch
         local pr_count
-        pr_count=$(gh pr list --head "$branch" --base "$base_branch" --json number --jq 'length' 2>&1 || echo "0")
+        pr_count=$(run gh pr list --head "$branch" --base "$base_branch" --json number --jq 'length')
         [[ $pr_count -gt 0 ]]
     else
         # GitLab
-        local mr_list
-        mr_list=$(glab mr list --source-branch="$branch" --target-branch="$base_branch" 2>&1 | grep -v "No open merge requests" || true)
-        [[ -n $mr_list ]]
+        local mr_json
+        mr_json=$(run glab mr list --source-branch="$branch" --target-branch="$base_branch" --output json)
+        local mr_count
+        mr_count=$(run jq 'length' <<<"$mr_json")
+        [[ $mr_count -gt 0 ]]
     fi
 }
 
@@ -424,19 +422,10 @@ create_pr_description() {
 push_branch() {
     local branch="$1"
 
-    local push_output
     if [[ $VERBOSE == true ]]; then
-        git push --force-with-lease "$REMOTE" "$branch"
+        run git push --force-with-lease "$REMOTE" "$branch"
     else
-        push_output=$(git push --force-with-lease "$REMOTE" "$branch" 2>&1)
-    fi
-
-    if [[ $? -ne 0 ]]; then
-        print_error "Failed to push branch '$branch' to remote '$REMOTE'"
-        if [[ $VERBOSE == false ]]; then
-            echo "$push_output" >&2
-        fi
-        exit 1
+        run git push --force-with-lease "$REMOTE" "$branch" >/dev/null
     fi
 
     print_success "✓ Pushed $branch"
@@ -472,35 +461,18 @@ create_pr() {
     full_description=$(create_pr_description "$title" "$description" "$platform")
 
     # Create PR/MR
-    local create_output
     if [[ $platform == "github" ]]; then
         if [[ $VERBOSE == true ]]; then
-            gh pr create --title "$title" --body "$full_description" --base "$base_branch" --head "$branch"
+            run gh pr create --title "$title" --body "$full_description" --base "$base_branch" --head "$branch"
         else
-            create_output=$(gh pr create --title "$title" --body "$full_description" --base "$base_branch" --head "$branch" 2>&1)
-        fi
-
-        if [[ $? -ne 0 ]]; then
-            print_error "Failed to create PR for branch '$branch'"
-            if [[ $VERBOSE == false ]]; then
-                echo "$create_output" >&2
-            fi
-            exit 1
+            run gh pr create --title "$title" --body "$full_description" --base "$base_branch" --head "$branch" >/dev/null
         fi
     else
         # GitLab
         if [[ $VERBOSE == true ]]; then
-            glab mr create --title "$title" --description "$full_description" --target-branch "$base_branch" --source-branch "$branch"
+            run glab mr create --title "$title" --description "$full_description" --target-branch "$base_branch" --source-branch "$branch"
         else
-            create_output=$(glab mr create --title "$title" --description "$full_description" --target-branch "$base_branch" --source-branch "$branch" 2>&1)
-        fi
-
-        if [[ $? -ne 0 ]]; then
-            print_error "Failed to create MR for branch '$branch'"
-            if [[ $VERBOSE == false ]]; then
-                echo "$create_output" >&2
-            fi
-            exit 1
+            run glab mr create --title "$title" --description "$full_description" --target-branch "$base_branch" --source-branch "$branch" >/dev/null
         fi
     fi
 
@@ -701,7 +673,7 @@ main() {
     mapfile -t stack < <(build_stack "$trunk" "$current")
 
     if [[ ${#stack[@]} -eq 0 ]]; then
-        print_warning "No branches to submit" >&2
+        print_warning "No branches to submit"
         exit 0
     fi
 
@@ -821,7 +793,7 @@ main() {
             for branch in "${created_prs[@]}"; do
                 if [[ $platform == "github" ]]; then
                     local pr_url
-                    pr_url=$(gh pr list --head "$branch" --json url --jq '.[0].url' 2>/dev/null)
+                    pr_url=$(try gh pr list --head "$branch" --json url --jq '.[0].url' || true)
                     echo "  • $branch: $pr_url"
                 else
                     echo "  • $branch"
