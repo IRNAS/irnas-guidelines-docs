@@ -55,6 +55,40 @@ check_requirements() {
     fi
 }
 
+# Check authentication for the detected platform CLI
+check_platform_auth() {
+    local platform="$1"
+
+    if [[ $platform == "github" ]]; then
+        if ! command -v gh &>/dev/null; then
+            print_error "GitHub CLI (gh) is not installed or not in PATH" >&2
+            echo "Please install GitHub CLI: https://cli.github.com/" >&2
+            exit 1
+        fi
+
+        if ! gh auth status &>/dev/null; then
+            print_error "Not authenticated with GitHub CLI (gh)" >&2
+            echo "Please run: gh auth login" >&2
+            exit 1
+        fi
+    elif [[ $platform == "gitlab" ]]; then
+        if ! command -v glab &>/dev/null; then
+            print_error "GitLab CLI (glab) is not installed or not in PATH" >&2
+            echo "Please install GitLab CLI: https://gitlab.com/gitlab-org/cli" >&2
+            exit 1
+        fi
+
+        if ! glab auth status &>/dev/null; then
+            print_error "Not authenticated with GitLab CLI (glab)" >&2
+            echo "Please run: glab auth login" >&2
+            exit 1
+        fi
+    else
+        print_error "Unknown platform '$platform'" >&2
+        exit 1
+    fi
+}
+
 # Detect whether this is a GitHub or GitLab repository
 detect_platform() {
     local gh_output

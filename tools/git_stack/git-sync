@@ -359,6 +359,8 @@ main() {
     local platform
     platform=$(get_platform)
 
+    check_platform_auth "$platform"
+
     if [[ $VERBOSE == true ]]; then
         print_info "Platform: $platform"
     fi

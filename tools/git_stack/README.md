@@ -26,6 +26,11 @@ The scripts require the following tools to be installed:
 - **GitHub CLI (gh)** - Required for GitHub repositories
 - **GitLab CLI (glab)** - Required for GitLab repositories
 
+You must also be authenticated with the relevant platform CLI for the repository you are in:
+
+- GitHub repos: `gh auth login`
+- GitLab repos: `glab auth login`
+
 The installer will check for all dependencies and provide installation instructions for any that are
 missing.
 
