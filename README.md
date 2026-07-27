@@ -1,3 +1,10 @@
+<!-- prettier-ignore -->
+> [!CAUTION]
+> With the start of 2026, IRNAS became part of DEWESoft and was renamed into DEWESoft RealTime.
+> With this change, most of our repositories will moved to the DEWESoft's internal source code
+> system, including this repository. This repository will remain public, but it will not
+> be maintained anymore.
+
 # IRNAS Guidelines
 
 <p align="center">
